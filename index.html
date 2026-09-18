@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission : Réussir ses études à l'université — ISBS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#0E1A2B;
+  --bg-panel:#152540;
+  --bg-panel-alt:#1B2F4E;
+  --bg-raised:#20395C;
+  --line:rgba(232,227,216,0.14);
+  --line-strong:rgba(232,227,216,0.28);
+  --text:#EEE8DC;
+  --text-dim:#C2CEE0;
+  --text-faint:#93A2B8;
+  --gold:#E3A73C;
+  --gold-dim:#7A6534;
+  --teal:#4FB3A9;
+  --clay:#D1613B;
+  --violet:#8D7FD1;
+  --radius:6px;
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-size:16px;
+  background:var(--bg-deep);
+  background-image:
+    radial-gradient(circle at 15% 8%, rgba(227,167,60,0.06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(79,179,169,0.05), transparent 45%);
+  color:var(--text);
+  font-family:var(--sans);
+  min-height:100vh;
+  line-height:1.5;
+}
+h1,h2,h3,.display{font-family:var(--serif); font-weight:600; letter-spacing:-0.01em;}
+button{font-family:var(--sans); cursor:pointer;}
+input,select,textarea{font-family:var(--sans);}
+::selection{background:var(--gold); color:#1a1a1a;}
+
+#app{max-width:920px; margin:0 auto; padding:0 20px 80px;}
+
+/* ---------- Topbar ---------- */
+#topbar{
+  display:none;
+  position:sticky; top:0; z-index:50;
+  background:rgba(14,26,43,0.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+  padding:14px 20px;
+  margin:0 -20px 28px;
+}
+#topbar.show{display:block;}
+.topbar-inner{max-width:920px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+.topbar-team{font-family:var(--mono); font-size:14px; color:var(--text-dim);}
+.topbar-team b{color:var(--text);}
+.topbar-stats{display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
+.stat{display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:14px; color:var(--text-dim);}
+.keys-row{display:flex; gap:4px;}
+.key-icon{font-size:15px; opacity:0.3;}
+.key-icon.on{opacity:1; filter:drop-shadow(0 0 4px rgba(227,167,60,0.6));}
+.progress-track{width:110px; height:6px; background:var(--bg-raised); border-radius:3px; overflow:hidden;}
+.progress-fill{height:100%; background:linear-gradient(90deg, var(--gold-dim), var(--gold)); transition:width .5s ease;}
+
+/* ---------- Screens ---------- */
+.screen{display:none; animation:fadeIn .35s ease;}
+.screen.active{display:block;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.eyebrow{font-family:var(--mono); font-size:13px; color:var(--gold); letter-spacing:0.04em; margin-bottom:8px;}
+.title-xl{font-size:clamp(28px,5vw,42px); margin:0 0 6px;}
+.title-lg{font-size:clamp(22px,4vw,28px); margin:0 0 6px;}
+.subtitle{color:var(--text-dim); font-size:17.5px; max-width:640px;}
+.narrative{background:var(--bg-panel); border:1px solid var(--line); border-left:3px solid var(--gold); padding:18px 22px; border-radius:var(--radius); margin:20px 0; color:var(--text-dim); font-size:16.5px;}
+.narrative p{margin:0 0 10px;}
+.narrative p:last-child{margin-bottom:0;}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--bg-raised); color:var(--text);
+  border:1px solid var(--line-strong); border-radius:var(--radius);
+  padding:12px 22px; font-size:15.5px; font-weight:600;
+  transition:border-color .15s, transform .1s;
+}
+.btn:hover{border-color:var(--gold);}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--gold); color:#1A1406; border-color:var(--gold);}
+.btn-primary:hover{background:#EEB758;}
+.btn:disabled{opacity:0.35; cursor:not-allowed;}
+.btn-ghost{background:transparent;}
+.btn-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:22px;}
+
+/* ---------- Welcome ---------- */
+#screen-welcome{padding-top:8vh; text-align:center;}
+.badge-logo{
+  width:96px; height:auto; margin:0 auto 20px; border-radius:10px;
+  background:#FFFFFF; border:1.5px solid var(--gold);
+  display:block; padding:8px; object-fit:contain;
+}
+.team-input{
+  margin-top:26px; background:var(--bg-panel); border:1px solid var(--line-strong);
+  border-radius:var(--radius); padding:12px 16px; color:var(--text); font-size:16px;
+  width:100%; max-width:340px; text-align:center; font-family:var(--mono);
+}
+.team-input:focus{outline:none; border-color:var(--gold);}
+.credit-line{margin-top:48px; font-size:13px; line-height:1.6; color:var(--text-faint); max-width:480px; margin-left:auto; margin-right:auto;}
+
+/* ---------- Dashboard path ---------- */
+.path{position:relative; margin-top:36px; padding-left:34px;}
+.path::before{content:''; position:absolute; left:13px; top:10px; bottom:10px; width:2px; background:linear-gradient(var(--line-strong), var(--line-strong)) ; background-image:repeating-linear-gradient(to bottom, var(--line-strong) 0 6px, transparent 6px 12px);}
+.node{position:relative; margin-bottom:16px;}
+.node-marker{
+  position:absolute; left:-34px; top:18px; width:28px; height:28px; border-radius:50%;
+  background:var(--bg-panel); border:2px solid var(--text-faint);
+  display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12px; color:var(--text-faint); z-index:2;
+}
+.node-card{
+  background:var(--bg-panel); border:1px solid var(--line); border-left:3px solid var(--text-faint);
+  border-radius:var(--radius); padding:16px 18px; display:flex; align-items:center; gap:14px; justify-content:space-between;
+  transition:border-color .2s, background .2s;
+}
+.node.unlocked .node-card{cursor:pointer; border-left-color:var(--gold); }
+.node.unlocked .node-card:hover{background:var(--bg-panel-alt);}
+.node.unlocked .node-marker{border-color:var(--gold); color:var(--gold);}
+.node.current .node-card{box-shadow:0 0 0 1px var(--gold); animation:pulse 2.2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 1px var(--gold);} 50%{box-shadow:0 0 0 3px rgba(227,167,60,0.35);}}
+.node.done .node-card{border-left-color:var(--teal);}
+.node.done .node-marker{border-color:var(--teal); color:var(--teal); background:var(--bg-panel);}
+.node-emoji{font-size:26px; width:36px; text-align:center;}
+.node-text{flex:1;}
+.node-title{font-family:var(--serif); font-weight:600; font-size:18.5px;}
+.node-sub{font-size:14.5px; color:var(--text-dim);}
+.node-status{font-size:20px;}
+.node.locked{opacity:0.45;}
+
+/* ---------- Question / option cards ---------- */
+.q-block{margin:22px 0 30px;}
+.q-count{font-family:var(--mono); font-size:13px; color:var(--text-faint); margin-bottom:6px;}
+.q-text{font-size:18.5px; margin:0 0 16px; color:var(--text);}
+.q-text i{color:var(--text-dim); font-style:italic;}
+.options{display:flex; flex-direction:column; gap:10px;}
+.option{
+  background:var(--bg-panel); border:1px solid var(--line-strong); border-radius:var(--radius);
+  padding:14px 17px; display:flex; gap:10px; align-items:flex-start; font-size:16px; transition:border-color .15s, background .15s;
+}
+.option:not(.disabled):hover{border-color:var(--gold); background:var(--bg-panel-alt);}
+.option-letter{font-family:var(--mono); color:var(--gold); font-weight:600; min-width:16px;}
+.option.correct{border-color:var(--teal); background:rgba(79,179,169,0.08);}
+.option.incorrect{border-color:var(--clay); background:rgba(209,97,59,0.08);}
+.option.disabled{cursor:default;}
+
+.feedback{
+  margin-top:14px; padding:15px 17px; border-radius:var(--radius); font-size:15.5px;
+  border:1px solid; display:none;
+}
+.feedback.show{display:block; animation:fadeIn .25s ease;}
+.feedback.good{border-color:var(--teal); background:rgba(79,179,169,0.08); color:#CDEDE9;}
+.feedback.bad{border-color:var(--clay); background:rgba(209,97,59,0.08); color:#F3D2C4;}
+.feedback strong{display:block; margin-bottom:4px; font-family:var(--serif); font-size:16.5px;}
+
+/* ---------- Terrain / code ---------- */
+.terrain-box{
+  background:var(--bg-panel); border:1px dashed var(--line-strong); border-radius:var(--radius);
+  padding:26px; text-align:center; margin:20px 0;
+}
+.code-input{
+  font-family:var(--mono); font-size:20px; letter-spacing:0.15em; text-align:center;
+  background:var(--bg-deep); border:1px solid var(--line-strong); border-radius:var(--radius);
+  padding:12px; width:220px; color:var(--text); margin:14px auto; display:block;
+}
+.code-input:focus{outline:none; border-color:var(--gold);}
+.code-msg{font-size:15.5px; margin-top:8px; min-height:20px;}
+.code-msg.ok{color:var(--teal);}
+.code-msg.err{color:var(--clay);}
+.skip-link{display:block; margin:16px auto 0; background:transparent; border:none; color:var(--text-faint); font-size:14px; text-decoration:underline; padding:4px;}
+.skip-link:hover{color:var(--text-dim); border:none;}
+
+/* ---------- Eisenhower matrix ---------- */
+.tray{display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 22px; padding:14px; background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); min-height:52px;}
+.chip{
+  background:var(--bg-raised); border:1px solid var(--line-strong); border-radius:5px;
+  padding:10px 14px; font-size:15px; cursor:grab; user-select:none; transition:opacity .15s;
+}
+.chip:active{cursor:grabbing;}
+.chip.dragging{opacity:0.35;}
+.chip.correct-mark{border-color:var(--teal);}
+.chip.incorrect-mark{border-color:var(--clay); border-style:dashed;}
+.matrix{display:grid; grid-template-columns:90px 1fr 1fr; grid-template-rows:auto 1fr 1fr; gap:8px; margin-top:10px;}
+.matrix-label{display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:13px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em;}
+.matrix-corner{}
+.dropzone{
+  background:var(--bg-panel); border:1px dashed var(--line-strong); border-radius:var(--radius);
+  padding:10px; min-height:120px; display:flex; flex-direction:column; gap:8px;
+}
+.dropzone.dragover{border-color:var(--gold); background:var(--bg-panel-alt);}
+@media (max-width:640px){
+  .matrix{grid-template-columns:1fr 1fr;}
+  .matrix .matrix-corner, .matrix .row-label{display:none;}
+}
+
+/* ---------- Weekly planning ---------- */
+.week-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:14px;}
+.day-col{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:8px; min-height:130px; display:flex; flex-direction:column; gap:6px;}
+.day-col.dragover{border-color:var(--gold);}
+.day-label{font-family:var(--mono); font-size:12.5px; color:var(--text-dim); text-align:center; margin-bottom:2px;}
+.plan-chip{background:var(--bg-raised); border-radius:4px; padding:6px 7px; font-size:12.5px; display:flex; justify-content:space-between; align-items:center; gap:4px;}
+.plan-chip .rm{cursor:pointer; color:var(--clay); font-weight:700;}
+@media (max-width:640px){ .week-grid{grid-template-columns:repeat(auto-fit,minmax(90px,1fr));} }
+
+/* ---------- Match (modalités) ---------- */
+.match-row{display:flex; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap;}
+.match-situation{flex:1; min-width:220px; background:var(--bg-panel); border:1px solid var(--line-strong); border-radius:var(--radius); padding:13px 15px; font-size:15.5px;}
+.match-choices{display:flex; gap:6px; flex-wrap:wrap;}
+.match-btn{background:var(--bg-raised); border:1px solid var(--line-strong); border-radius:5px; padding:8px 13px; font-size:13.5px; font-family:var(--mono);}
+.match-btn.selected{border-color:var(--gold); color:var(--gold);}
+.match-btn.correct{border-color:var(--teal); color:var(--teal);}
+.match-btn.incorrect{border-color:var(--clay); color:var(--clay);}
+
+/* ---------- Forms ---------- */
+.field{margin-bottom:18px;}
+.field label{display:block; font-size:14.5px; color:var(--text-dim); margin-bottom:6px; font-family:var(--mono);}
+.field input[type=text], .field input[type=date], .field textarea{
+  width:100%; background:var(--bg-panel); border:1px solid var(--line-strong); border-radius:var(--radius);
+  padding:12px 14px; color:var(--text); font-size:16px;
+}
+.field input:focus, .field textarea:focus{outline:none; border-color:var(--gold);}
+.field textarea{min-height:70px; resize:vertical;}
+.checks{display:flex; flex-wrap:wrap; gap:10px;}
+.check-item{display:flex; align-items:center; gap:7px; background:var(--bg-panel); border:1px solid var(--line); border-radius:5px; padding:9px 13px; font-size:14.5px;}
+
+/* ---------- Key reward ---------- */
+.key-reward{text-align:center; padding:34px 20px; background:var(--bg-panel); border:1px solid var(--gold); border-radius:var(--radius); margin-top:22px;}
+.key-reward .k{font-size:46px;}
+.key-reward h3{margin:8px 0 4px;}
+
+/* ---------- Obstacles / final ---------- */
+.obstacle-card{background:var(--bg-panel); border:1px solid var(--line); border-left:3px solid var(--violet); border-radius:var(--radius); padding:17px 19px; margin-bottom:14px; font-size:16px;}
+.skill-list{list-style:none; padding:0; margin:20px 0;}
+.skill-list li{padding:11px 0; border-bottom:1px solid var(--line); font-size:17.5px;}
+.skill-list li:last-child{border-bottom:none;}
+
+.helper{font-size:14px; color:var(--text-faint); margin-top:6px;}
+.pill{display:inline-block; font-family:var(--mono); font-size:12.5px; background:var(--bg-raised); border:1px solid var(--line-strong); padding:4px 9px; border-radius:12px; color:var(--text-dim); margin-bottom:10px;}
+
+/* ---------- Campus map (vie étudiante) ---------- */
+.campus-map{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0;}
+.campus-tile{
+  background:var(--bg-panel); border:1px dashed var(--line-strong); border-radius:var(--radius);
+  padding:16px; cursor:pointer; transition:border-color .15s, background .15s;
+}
+.campus-tile:hover{border-color:var(--gold); background:var(--bg-panel-alt);}
+.campus-tile-head{display:flex; align-items:center; gap:10px;}
+.campus-tile-icon{font-size:22px;}
+.campus-tile-title{font-family:var(--serif); font-weight:600; font-size:17px;}
+.campus-tile-desc{display:none; margin-top:10px; font-size:15px; color:var(--text-dim); line-height:1.55;}
+.campus-tile.revealed{border-style:solid; border-color:var(--teal); cursor:default;}
+.campus-tile.revealed .campus-tile-desc{display:block; animation:fadeIn .25s ease;}
+@media (max-width:640px){ .campus-map{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-team">Équipe : <b id="tb-team">—</b></div>
+    <div class="topbar-stats">
+      <div class="stat">🔑 <div class="keys-row" id="tb-keys"></div></div>
+      <div class="stat">Progression <div class="progress-track"><div class="progress-fill" id="tb-progress"></div></div> <span id="tb-progress-text">0/5</span></div>
+      <div class="stat">XP <span id="tb-xp">0</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+  <!-- WELCOME -->
+  <section class="screen active" id="screen-welcome">
+    <img class="badge-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArEAAAJFCAYAAADK2a8iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAftJJREFUeNrsvX+QHeV55/sKg0FCsQbzQzJI4kjhItZYyyjZ2Aa2ioNMLSZcQLJ3je86Zc1UOa66Zm2kKtY3+eNakv+JN0sVkndNbeK9VyPK3rK4FUuIS2JSIEapAoK3HA3LxWsRRxokIBKSzIiAJDCY298+/Y56evqc0z/e7tN9zudTdRghnekfb7/d/emnn/d55xiAktmzdOWw96PhffRzQfAzjr3Bz3HvM7n60AuTtB4AAACIOTQBlCCtEtY13ucm79P0PkMZFzUVCO0j3meXJ7VTtC4AAAASC+BSXIcCcb3XtI+05mWXhNaT2TFaHAAAAIkFyCuv6wN5HSpptZPeZ6v3GSM6CwAAgMQCVF1e42R2M5FZAAAAJBYgicA2vR/bTGuwVhUY9z4bPJmd4OgAAAAgsQBxAvuAaUVgq4bSChSV3cJRAgAAQGIBrLwqZeApU9ygLVeMmVZUllxZAAAAJBYGXGCHA4EdqskmK63gZkQWAAAAiQUEdqhmm47IAgAAILGAwNYSRBYAAACJhQETWInrPlOdCgSZRdaT2FUcUQAAgHpzDk0ACXmqDwRWDHtCvo3DCQAAUG+IxEJXKlxGKw9rVx96YRdHFwAAAImF/hTYpmlFYfsN5cUuIz8WAACgnpBOAN3o11fvQ328bwAAAH0PkVhoy56lK5VC8ECf76aqFYxztAEAAJBY6A+BVaTyoKlvOa2kjHsSezNHHAAAoF6QTgDtGBkAgRXNIO8XAAAAkFjoA+5lXwEAAKCqkE4As9izdOUa78fOAdvti6hUAAAAUB+IxEIcdw3gPo9w2AEAAJBYqDdrBnCfb+KwAwAA1AfSCWAGe5auHPZ+7BvEfV996AXOBwAAgJpAJBaiNAdY4JscfgAAACQW6sl1A7zvwxx+AAAAJBbqSWOA9/1KDj8AAAASC/WkOcD7TiQWAAAAiQUAAAAAQGIBimaIJgAAAEBiAeoG6QQAAABILEDtYNpZAAAAJBagdkzQBAAAAEgsAAAAAAASC6UwOcD7TjoBAAAAEgtIbO14nsMPAACAxEI92TvA+05OLAAAABILiBz7DgAAAMUwhyaAMHuWrlTB/zcGcNcnVx96YRk9AAAAoB4QiYUZeCKnwU2DGJEc5+jP5trrtzS9T4OWAACAqnEuTQAxbDeDN3vVIxz2aXFd4/24y/vo5+YXn12P4AMAQOUgnQBmsWfpyob34+AA7fLApxJExFUpJYrIr0VgAQCgqhCJhVl4QjfpieyY98eRAdnl7QMqroq23xsSV8tEILCTnA0AAIDEQh3FbhAkVhHHLQMkro2QuDZivjLmyeso3R8AAKoO6QTQlj1LVz7l/Wj2+W5uXn3ohU19Lq5DwQPJOtM+11kyv8ET2DF6PgAA1AEisdCJDd5nXx/vX19HYYM8V4nrmi5fVfrAqCew1MkFAIDaQCQWOrJn6coHvB/r+3T3RlcfemGsz8R1OBDXETMzz7Ud2n9FYKfo7QAAgMRCP0msREjR2Eaf7douT2DX9om46hgp2qpc16Sl0UgfAAAAJBb6XmSHTX+lFUjglgUTO9RZXttVF+gG1QcAAACJhYER2RHvx7Y+2Z1VnsDWMv8zY9Q1zBZPXjfQowEAAImFQRJZSexIzXejlnmwOaKulknTGrw1Tk8GAAAkFhBZBLZoeVVba6BWM8didgUCy+AtAABAYqHSoinxuckTttGCll9Hka2NwAYTEqh9FXkdyrGoqUBed3FWAAAAEgtVltemaeWtSoI0feycAte1yfuxsQbN4o/Cr4PAevKq47fO0QPCeCCwk5wZAACAxEJV5VXRugdi5OdmT97GC1zvmkCahyraNBK4tVUfxBWkDGQdqBUn7Zs9ed3CmQEAAEgsVFlgJT47TXwd10IlNlh/IxDZZsWaxs8DrWoZraDKgCaRWGfc1eCldBYAACCxUAuBHTGtCGy7SOhmT+I2lbQtErKNpvdRWQmc0gcqmQca5LuqndY4bitFXzdxVgAAABILVRfYJNPBliaxwTYNBYLWi2lqFXHdWub+ppTXpnGX7xpG0Vflvk5wVgAAABILVRfYpNUBNvdC6oIUA21f3tH1SZiUvHqfsSqmDgTyKrFvFrB4oq8AAIDEQi3kVUL4lEk+AGhzryOTweCvu4zb1+eSVaULbC865zeHvI4E8tooYPFEXwEAAImlCfpWYMW4J3k3V2gfmqYVkbwu2I+kgidZm/Q+e4N9qqy8FSyvQlUHNjNxAQAAILHQrwLrC48nfBsqvm+NDsI3UdXqAhFx1fGRvN5boLxK4pk2FgAAIOBcmqBvBVacrPr+eZI6GQha7QiVySo695dpYwEAAJDYgRFYqL+8Mm0sAAAAEovAQm3kVYwbpo0FAABAYmvITgcCy+h1dwI7YjpPLOGSDUwbCwAAgMTWjqAObNPBosihdCOvRVYbiD50UDoLAAAAia2lwCraN+JQiqD68ioonQUAAJACSmxVS2AlTtscLW5q9aEXLqJVU8tr0xQ3w1bscTIM3gIAAEgNkdjqCOywQ4EVRGHTyava/4ES5VWMGwZvAQAAILE1FtiGaVUicMleWjaRvKrtFXkdKXnVSh3YxBEAAABAYusqsBrtrkoErke9j9O6HeXVlsvaWPKqlT6wlpm3AAAAkNi6o1fYrmvBKh8WSWovsCOmvHJZ0QeLtQzeAgAAQGJrTTCQa6SARTNIKF5emwU9NCSB9AEAAAAkti8E1g4kKoJHaOEZ8toI2npND1ZP+gAAAEABUGKrNwJb5JSylNY6K69lThMbx7ghfQAAAKAQiMT2ho2muFfapBK0BFZRV0VfGz3aBNIHAAAACoRIbMnsWbpScrWzwFUsW33ohckBlteG6V3qgCB9AAAAAIntO4HVK+2DprhX2+OewN48wAK7yfQudUBMBAI7SW8HAAAoFtIJymVbwYK1eUDltWl6V3XAssWT1w10cQAAgHIgElsSJaQRDFwUNhi4pfzi9T3cDKUPbPAEdoxeDgAAgMT2m8AWnUYgVnkSOzFAAtvrgVtC7T3qCewEvRwAAKBcSCcoh40FC+zYoAhsEH1VWsaaHm/KrkBgKZ8FAADQA4jEFsyepSubplUTtkgGoiJBEH0tOq84CUof2ELvBgAA6B1EYovngYKXP9bvAluh6CvlswAAACrCOTRBcexZunLEFDti3h9U1OcCK3E9WAGBVbrGKgQWAACgGpBOUJzAljGYa/PqQy9s6lN5Vbspij1Sgc0ZM60UAvJfAQAAKgLpBMWxvmCBlVD1ZV6mJ7CKXqscWaMCmzNK+SwAAIDqQSS2APYsXSn52meIwmYRWO3Txgpsih4SbqZ8FgAAABI7SBKrQUgjBa5i0hPYZX0mrxJ/tVuzApszEQgs6QMAAAAVhXQC9wLbMMXncfbV9LIVKp0lxjx5HaUnAwAAVBuqE7in6FfhisKO9ZHAavDWzooI7CgCCwAAUA+IxDqkpChsX5TUCtIHJK/DFdgc6r8CAADUDCKxbik6Cju++tALu/pAYJU+sK8iAkv9VwAAACR2cAnqwhZdkL/2ubBB9YGqpA+MmdYArkl6MAAAQL0gncAdRdeFVRR2vMbyWpWpYy2avGAL3RYAAACJHXTWFS1dNRbY4UBgq5L/qgFcu+iyAAAA9YU6sQ7Ys3Sloos7C1zF2OpDL9Ry1HzFymdNBALLBAYAAAA1h5xYNxQdha1lLqwnsOtNdfJfxw0zcAEAAPQNRGJzEpTVOljgKmoZhfUEtuhZy9KwxZPXDfRWAACA/oGc2PwUOVBJ+Zu1isIGA7gUfW1WZJOUPjBGNwUAAEBiYSZFphJsXX3ohcmaCexTpjoDuEgfAAAA6FNIJ8hBwakEkrBlnsRO1URghwOBrcoALgnsFL0UAACgP2FgVz6KTCXYisBmYgyBBQAA6H9IJ8hHUakEErBaFOKvWAmtzZ68bqJbAgAA9D+kE2QkmGb2jaJkbPWhFyovY57AjgQCWwUYwAUAADBAEInNTlGpBJMIbCoUtV7rCew4XRIAAACJhe7cVNByK19Sq2ICSwUCAACAAYR0gozsWbpSVQkajherKOwyBBaBBQAAgM5QnSCbwA4VILCi0lFYBBYAAACQ2HpTRDF/RWHHEFgEFgAAAJDYomgWsMzKRmERWAAAAEBi+4PrHC+vslHYipXRQmABAAAAic1Bw/HyKhmFDWbieqAimzOKwAIAAICF6gQZ2LN05QcOF1fJigQVm0qWmbgAAABgBkRi0wtsw7WgVVBghyoksLsQWAAAAEBi8+NSYiuXC1sxgZ30PqN0OQAAAEBiq8X2Cm6TBnENV2RbNJ3sFN0EAAAAkNj8uBS8sSrt2LXXb9EgrjUV2ZzNDOQCAAAAJNYdrl6zj60+9MJkhQRW8rq+IpszSR4sAAAAILHVpDIDujyBbZjq1IIV5MECAAAAEltBKhWFDQR2qCpt8+Kz68fpIgAAAIDEVo/KDOi69votSiFoVqhtNtM9AAAAAImtHiqrNV4RgW14PzZWqG0UhZ2kiwAAAAASWz12VWhbJLBDFdoeorAAAACAxFaUvVXYiGuv39L0foxUqF2IwgIAAAASWyC5apeuPvRCVSKxGyvWrtvpWgAAAIDEFkeeGaTGq7ADQRS2WaE2naQiAQAAACCx1ZXYqsxAta5ibbqLbgUAAABIbIGsPvRCHhE92evtDyoSjFSsWR+hZwEAAAASWzxZRXa8Atu+pmqNSSoBAAAAILHlMFnjba9aKgECCwAAAEhsSTxfx40OUgmGK7ZZe+lOAAAAgMSWw3hNt7tZwW2apDsBAAAAElsCVZk2NgM3IbEAAACAxA42dSwLNVzBbZqiKwEAAAASWx5ZcjkbSOxMXnx2/QRdCQAAAJDY8sgSie2ZxAaDugAAAACQ2EFm9aEXJk36AV7X9XCTkVgAAADoG86lCXKx3aQb8T9Mk83kv/xf/++mq5bNpyEAAAAAiS0RpRQ84H2GEn6/sWfpyqHVh15gMNNZNtIEAAAAkBbSCXIQyOhYyl9r0nIAAAAASGyv2Zry+3fRZGf55cG3aAQAAABAYssmGOA1luJX1vRoUyuZwvDKP56mEwEAAAAS2yM2p/ju0J6lK0sX2arWY30ViQUAAAAktjcE0dgtKX5lXY82dbJqbferN971PwAAAABIbG9QNDbpK/s1e5aubPRgGysZjX3hf56k9wAAAAAS2wuCSgUbUvxKL0pL7a1i2z33d7+iAwF04cTUr80Tz71hvrfjNRoDAACJdS6yYyb5LF4jPYjG7qpiuykvlpQCgHj2v3zaF9c/+u5Bs+PxY2beBVy2AQCQ2GIYNcnTCkqNxr747PpJU8G8WPHTfURjAcI88/yb5tt//rK5f/thM7H/bCm6FY15NA4AABLrnmCQ12jCr/ciGru9iu02/vQxOg9AIK+Kum575Ig5fOSdWf8+vIJpmgEAkNjiRFav7ccSfn1byZs3VsU2O33mffNTcmMBefXlVfmvcSxZdD7pBAAASGzhIqtobJJqAM09S1eOlLVdQUpBJXNj/2rPEToOdH/q6yB5dUQ5r0obSLJft3zqIjpACk6d+U3fDoSry7712/kK1eqTSGyx3GyS5cc+4InsUInbtbWKjaXBXXufIa0AOt8QFbHctvto7fdFqQL3P/SKn/MalzYQ5c6bLjY3XPeRgb5B6tin+f79D7XyiR/de6Lv2qIO+9ZP5ytUs08isQUSlN1KIrIS2J1lbdeLz64fN8mrKJTKXz15xE8tAIiiC6OVmP2Tp1IJTdUu9rq5K/qq/eiGxPU731hm7vAkdpDZ8fjr/idpVO/Bh1+bfjhQabIkDwp1oQ771i/nK1S7TyKxxYusUgrWJviq0grWl7hpG6rYXhLYHz/2Kh0HZqELY1Rq6iYmupH/8XcPdL2hK+9VqQOS19G7FpmLh84b6GNvo7D6uTtBlEf9IvyA4D847D7i/6w7ddm3fjhfofp9EoktR2THTbKKBUorGC5jm158dr3keksV20sDvH558C06DkyjvNHoBdHPv/Ke/usgJooeKnVAEdhO2yt5VdrAn3xjubn71ksHXl6nb5JHz8pPuNxYO+K+oxut2r/u1GHf6n6+Qn36JBJbnsiOJRTZp0rMj00zVW6p/PAvDg18WgEX++6suHJu5Ufr6wLfLXVAsqqIq+RVaQNUIOh8XmQ9N1Zd07/lyZLsW6+vKUnPV659g9Mn8x5vrpTVE9mhskT2xWfXT5nkNW1LRYO8BjmtwCbJg+kofnffelmlt1F5gRqt2+4irZJZklelDSj3FXlNRjgymxTV1+3XgXFJ9k3pGE9GXvFX8Xzt9XZCeX1S+PWwj2ZPM+GKWU2RVUrBA2VsjyeyaWralorSCga1dqzNHyOHLJC9hefP+rs7Kx6x1MW5Xf6mZt26b90S862vXjnQFQeSMu/8dMdZDwdRvnjrpf1xLmTYN11HdE05VNL1JOv52i8pHwN3fc54vilvOu+APyS2uiKr2bzKmghBg7wmqthWisa++o+nB6p/hE/sU+/wWs2XmJibn15NVllg4y7OVl7v+/LiSm9/HW6SnZh7wYdm/L+igP2SX5x238K5qKdLup5kOV+r/PaJ9Ab355vypnc8nr+kJhLbe5Gd6iKym4rellBaQeXyY5UX+19/eHCg8mPDNfYOHznDydJGZKoqJcqBjQqstr1seR3kG280EnhJHw2QS7tvzzx/crosWZnXk7Tnq1IIbJ+V4FQJlY8Ct+db+D73UoJSg0hsdUW2Wx3ZjWXM6BVUK1hbxXZSfux/+q+/HAiRjY7qPU0E4OxNcEH1RcTWgLUoIqWcV6UNFCmvcWknuvF2ysetM91uemr3fs0vTrtvE/vf7smDTdrz9emK1pGVbO3PIVmDQNo+qYcqV22KxPZeZCcCke30On9bSSI7bio60EspBYM40OsQObHTLI1EdqqYLxyOJqnOq6oNFJ3zqpusqh+Eo7+KBusmoZ96RdsPudVpUwqWLLog1Ff6641Gnn0rqy+kPV/Dk1icqkjAQttk89pJKXDXJ4+ffG/Wwz8SOxgiu6kEkR0zrdJblUODvFR6q5+JRutOkxPbVmKqmC+8L6iXqOir6rwWHQ0M32QVAbZ1aMPR4Nb0tocr94o2LfMieXdd+0voFWe/CUiafYteU8o6b/Kcr1V56AoPzMwzgn4grs85zjeqE/SHyE55n1Wmc6WAjWUM9vJEdpOpcMWCfhfZcO4YObGhdom8nqxi2+jmq5t3WRUHonPS2xnB4m4icSPG+/s8OreSYlT2vkVzUcs6b9Ker1XLcbezxBWJlv9En5QTS9MnL1lwrrP1IrHVk1m9zu/0Sn+kJJEdRWTr90Tb10/6kchOVfOFdfH2JzcoOPLZKvo/+7WrosCq0RhG9TnrniN6cejGlyTNJvx602+vPnqrkWbfog8vZZ03ac/XS2bJdm8fOqLRQZfyr3NX1wi9MdEI/UcTTKXcT33S5YMVEltNkZU8Kio71UFk9xU9IQIi2xuiuWThXLFBRyWqLL16Pd7pwcJun/8Kf/th80ffPVhYNEdSet+Xl8yI+urPEth77r7c/+g72qZ+qEUblpwkaTbR1+gv9dHgnDT7FpXJ4yVeT9Kcr1HZrtpDhyv5t6XEwpK+b/9bA9Uno/2SnNj+FFnlxy7zPuNtvqIJETSz13AJIlvJwV79KrJXhy78/k0nkgQ/yIRvdMd7IPcS0k4DpYZXXDjrAUTRlnv/9Jd+tMV1ZN1WP9BHf1ZB+bPbMt+vijB658LB7S+LettfqrJvYZk8UeL1JM35Gn0d3euH96hUuxpkG3f96JdUlzR9MppukvV4I7HVFlnlyWrA1+YuItssWGTHqi6y/VR+y2W+UDd04VBOlgTLLyVT8cE/4Rtd2Tc5CaidSU03orgI6w3XLYjN7dPvapCI8lWLeHWoSKsqIdh127bppyL/M9sz2fkevlGe6LOHwTT7dnHOa4r6r64N9lPE+Rp9Hd1riY2m35w4mX97lDrQTljTiqy+b49HVd7WpemT0TeOWYM15xqog8xu8kR13PujcmEbkX8eCkR2s75XpMhee/2WSe+PO4N1VkpkVYLr61+5atbMIbW8OUWkQ69liqgxqgvqrEEFgWApirfqmvn+zyrlUkZvdHYgVRmEI6m2AoBuHneEop9qq3u+cLkvuXFRVyuzen04eucip9sePk7/8aFX/ChsP9VKDbdV0hu+bpQTwavafhskmWbfwqkYaepzavnqr3HtrQcnRf47PSSlOV9npRNUIOddEWzbXnmjpZLNToO4kqRP2AdpHZdo++g46Hj0MnUoTZ+cnTOdLRBFJLY+IiuJVZ7srjZfUeWCnUXmyQZ1ZLuVAusJklhNiNAvU9QWLWaxAhu5ednX4PoZd9F0hW4OEsSJBHlh0RtdnuiI1vdomxt03M1DMx9FiaZ+2GNnX+932mcN7CgiKqsIseQ6bnuLaJuyyPKAGs2766eBkmn2Lcv1ROe9Jsto1wfUz7rlfKc5X3W+zKjMUoGSVtEIdp7zIVz2Lut1Um9y1N5xx9qmLum60qt+nqpPLnRT9xuJrZfIKr1As2rpEzfoa4332Vdknmwws9fNHWS65yL7y4P1T5IP18R0nctnUwjSSJFuZhLa+x96xRdgv5h+zGtFXbTSvNqyF11Fe7SOblIXnRkmy4XPjgzW+nYHEwV0e0VqB1GFb7KK0rSLkCuCre93kwetX23q8nWgrW2ZZUBZlrbpFUnabFaZpz6q9Zlm36IPAN3aTud40v5jH3JdnK9Vmx44ev7ufznb4EBd12yb+9eGdUtmVRDp1tfbvd2Jk119N6so5xH1NH3SVZoTEltPmZVAKio7HvPPjUBk1xcoslPeRyK9oWpto1cSEtm9zxyr+Q0qlEvmOJdvd47on16tSYAlORp9/4fffmnGR6KbdKStbn7RG+Xu0MW+/Y3lghnSlVbS4gZWJImS6IamV/T25tNtwJS+L5END7Zq16auZNFGYe0NKY0c52mbXpAkh87VK8sqkmbfonn2ndou7UOu+NHjx5ycr+GHwiqkf8SlQ2R5MLTtqVf9qhqi/dTPpCK3O+WgUG1nmofY1rn/in8dsqW/iu6TNhBgOUQkduBEdjIY9CWRjIvKPuCJrHJlGwXK7JZApier1j6aorbOA76KikiUUcA7euGPQxf1dtvxxHNTnZcfeg2VNrKmi3PcjUg37iTpDH7Oq3fzUSQlyQ1I31fO7He+saxjrpp/E/EeCvIWPo+2aRoxzts2ZZNUcrLk0tZRZNNMeOD6IVd9pN3605yv4e2sQurHrFfeGSL5dipq7ZvqNYcJP+C2e6vTSg1Kf83e94vk56w/qDeUK6317Xj8WKF9MhqsyTo7JRJbf5mVSKoUV9zr/aZpRWXXFCiyE6Zzrm7P0IAvRWV/9ca7tT7GLiMSL71cfK3MbtUVdFHulDbQLZKbdbCSRKyTjKW56KcdaKcbmPJku8mvbhxZoyBq1+ignaSRWJdtUxYnppK9oZjXB4M9Xe9bp2tK1ofcdgOT0pyvVaukEd12SVkauQ5HYePy5O3/d9rvrMcjqRSGB5zpLZOVUP1dlrdDafqki2ANEtsfItspV1YDvXYWOegrlF7QLle3ZyhP9k//8/7a5cmGBwy5jEjsnzztRwR1QdWr8e9/62r/s/WbV/mCdcunLsp9I+n2+91ejUm8OslX+Ek/zUjrH3WJLJSR+yn5DacktLtp6dWei+OedJ+q0DZpxStpVCwcTat6Cbm0pNm38KvbdoX787RPu4fXNOdr9OGwCpHzFZHBm2misXZAbFz+vK1UIlZ1uB5kPSZJy6rZh2Y7SYpSoKxc69/SXofS9MnwfS5rsAaJ7S+ZVTRUUdktMf+saOzBgqOydv3jVWoXmyerFINBod2F5+5bL/UFViIbvrn4Mzt5F1n9u159J31dHqXbYIWk6QydcvayjFLXzaRbVDJt/mie6I6fFxdcwONyZnWzTzqQI/zwoIeQurVN0u9HhSbpA0w/lRkret+yDjBUX253vchT9rCIWbt0/cmT5z2R4q2EjXDeETnHJXfKPbV9+pZPtY8vZR3Ye8Pwgq7fCQ84+6J37bd9SvWubX9QSa8y+mTWayoS238iq6is8mTjBn7ZqGxhubJBVFa5upWLymqw1+b7f16LqOy888/J/DRuR7JmRet6tM0AK92sJF2SXH0UwbXRXH0kZ51vICenhUuyrN9RZDIa7XA9RejTE29OS7bd5riBFUnaOW/7WuyNS9sQly9rS+qkiUbpISRtnUiXbSMhTnPTS9OWceuf6IPpOstibuia0u5Yqu/ovNQ5nlRG9L27/9WlzrZzRUzZOpcoNUYim7S0XvRhKenAVZsnrPPIRmH1/xJo5b/b62u3t186HuGH3kQC6x3HbilP6gM2Ehyt9zt8zfwZ0l/UOAoX9c+R2P6V2Ylg4NdojEw2TStXdlNR6w9FZceq1C7Kj1VUtuqDvqKjPJNKnS6633v4tdQj0+2IZNV91AU2fOG2+Zx+ysGXF/tRBV189En71K10BnGjd5G1F83WKP7FM+SrW7pBWmwu8C2fvmh6m+20rOG27tYnsrZvp7bQcmx0PG59itikGfAVHTxSVtvYG3TSB640ban9j/tOt0GAeSJZdSDNvi2dMeDmTNtzTOelznHNANetsoatwNGplNyJirW/7e/tZt0L9+e4B6ykA62s7Opap+/bkf/h31W73dGlje35qGukAgfdyvbpmOl60k1gH9xx9s3k3Mh1PDqgzc5U6LpPuqB/M97BZ/vJ1yfWLVj4Z94fNWT806F/0v83vX8b8T7Pe9+bdL3uY6/85Iz3eeSyJZ/dG4hzZWb6Uq7s0z89Yd57/wNz1bL5lTx2GtX66/c+aF1Qj75jli+e2zYRXheYv/nZSfP9H//j9ICX497PT1x1oTnv3DnxUYKj75pnNQr1r4+ZHz953Lz4D6dm5MpJaP7g9oX+BVEXzrjlpOWHf3nU3yftz4L55wZ1JD80HYF58R/eNm++9b4577xzYqVOkbcfPHZ0ul20XTf97lBXubKyY9f7Ee+j/dFn+RVzzX9/8Z/8ZX7skg/HRjzStm/byIzX5v4+/OXr01FEP1/O+2iGtNZ3Zt8sdGxe8m48Eox2fUBScuDVM/6xPHLi3ekbaKcIjou2sZF77ZO+pz40p0NELU1bap/2/mxqeqS09j/cR9Veao+4G7v93Z88ffYBQLmHWk/dybJvOr7qR0LH6c233vOPUbvrg76rvnG6wwPlJ69tpSWp38SR9XxVP/YjisMLnFZqUV/d+7OT021gJ/XQuWUjjjbdQN/TtaidCHe6Hms96uP+YEvvz1pPdFn2ASBpIEDLeWbi5PQxbPdQoT6g8yTuuKptdX3Q+WSPib2+hM8j/W548K2+q/bQEvW9uMFbWc+3cNvcmUDoo8wxMDAEKQQPmFZ+bBRFTjeodFdR67/2+i2bvB/3mopNW/vRiz5sblu9yHzydz5aqeOlwT37J0/1ZN168u8261SWG6/qyLrezm4pDLpIqq5tVYlGYePq52ZFbdMpT7nqbRNF7ZRn9jilW2TJGy4LKyr6mTaC2W3ftEy9ZeklSc5XyZN9za23Py6vQd1mKmwnhiri7zJ1xU4R608u4D1cHO8ymLXM88tGcVX3Oy9Jzjd7n7N1uNNCOsEAEdSWVa6q0gzGI/9sZ/vaVGAVA0lsJVMMlF5QtXzZ6CudstCFRzca14NGipgtaUWje05V1WuDRvPCdBNxlRd49ZXzat02URStTjPT0ey2Li7fMs9gPz+1IphAJDxhhct9y3s9kWSkzbfOcr5aorN99eoapPScVde4fVtnp4j1y1h5ApdVYNPkLifBTiXsaoKTNOdbdLYvJBY6yex4KF92MvRPkteNgcyOFCSyGvil9babcaynMqt82apMXZvmgu8qOqAn4SpHqmZHDhbU+lxsN6r7a1+4PNN899GoSj+NzFc7SWCzCr7aM2+bdnoYyDrYz86UlifSl2Tf1Bey7r999d0ud9vl+Wq38eoCHjjSvtm6M8j/V7+r2rmkY6F82jQpCdHzqZ1gu3gTlPR8sw9XWe93SOxgy+yY91lmZg/+anifbUEVg2ZBMjsRVDHQZ6JK7SKBrYLMZrlw3n3rpZnXFR3I45poxYW8JI1CzHV488navm2X12ZUt/ar24CZbsKSJL/MVdskXV+etrTLvyE0KDDd+i4rrG8rorYqY4Q4zaCZvPuWRUCjuZtZRTb5+drKt3Qd/bT9NM1DoB10ZWfeq5LA2mOQNrfW7k/R1/ukfdJud9bzB4kFX2ZN6zX/5ojMSmCfKrgk17j3WWVmR4WRWWNSXTglooqipr3BFJU+EHczdDUjj5b1mYQR41Ur3NwMs7Zvuwu3HTDX6TtZRVY3kCRt7apt1E/viJTpcdmW0VfZX0wpwElKDmXF1j7O0i8Ufc0b9Uqzb4qEpjkHtWzJTvTakFZk05yvliKOV5K3TH7JsKCedvR3iy7/lVQ+o22fVmTteIek15e094a055v6ZNZ7A9UJwGf7ydfPeJ/xoJKBwgLDplXBQEhg13v/1ggqGTiv/3rslZ9MeJ+tly357MvBuisz+OtXU+/6U9hKZC++6MP+QLCy0AjY08Go8243iXvuvsIfVRoe5d/xJuF9754vXF5IxKP9jWmeOXIi3yAGbfe9/3ZxijqWH/LLC6kNT2fMW8zSvu1uBr937W+Zr37+Y4luiFqfRnNrBG6S0lW6EWg7k8qpi7bRDevzn7l0+vjaagau2lL79NXPfWzGCPhFl3w40Xlh5UNVNopCI7LffPt9c9uN6QeGbvlvr2Zu9yz75re5d4z+v0glkjgUOe0UTdN1I0m/zHK+ftI7R3SMnV9/vG1Rf/erM7z93nQ/1bbpWqvazaN3tT839fD1nvc7SfpdEUGAe75wRVvp1Pnxid++0N+2TueTBFbXINsffu/aj3Q9B/V9tUkR55uqHdzopz5l01GqE0AsweCu9Sa+msCY99lccCWDEdPKz21UrW1Ukuu2zywqtTSXpE91B+NuPO2K5SvKE/eacq4/O9e8RE/gdr2u82RtKanw9u0LbW+7V9Phub2zYEcDhyVar4IVTbs4uJjmbd9OkYY80aVOfaBXbXN1m+k0280ClqWvKnrYToA6tYl+VzJ/scMSTXGo9qfWk/Z1c7QyhJ9DuPD8RCWlXOxbpzZPs+xOOZR5+2RV6dTvng4NzFO/VTt2u06onZZ2aCe1YZoBje0GB3Y6Hp2qoqg+rc7zKpxvSCxkldl1MUKJzJYss2Wjm6xudhIPRWWKSjmQ+Gh2KjvPuAp7l0G47NCdwStxoG3SyIxGc3crZRZHuJSUncEO6o9EUNdJXTv1U2XC7DVO9WU1ycm+yENemde8TuihVf0yXGkjXHaripBOAB2xaQbeZ+u6BQujr/r157LSDJ73/ndRlWS2l2kGScUwzwQFkhgVxhatQulv+8Xv2xU2z8NPnv6V/4pTlFmQfmz30bPTP376okJeYdaVrG2TtN/l7Z9VYGL/2/5D3k3/Yih1Uf5H/+ZX0+2ryJYmNzly/F0zZ46hH9YYRTo1YYiuaUpXsJMIqK/ruOrapjdbirwqDeVEUCNWIntJyVHMKEqpUPqSJjbR9um8z5ImUyYM7ILEhKoZqNbseOifRrzPwT1LV24rcADYrlA1g11VapfwALAXfn6y9PW3m1Nekc2so54lGNFagVpWEXPVa7m7Q7PDDJeUo2trNE6vd8V8TvKUbRPX9xTJ0Sv2bnVT9Z3wrEB1xOVkJHaAmCJ4mhQkzRS+UC3Cb6x2t+njdipZm16jSS6qsu22MkMdrolILGSR2V1BnVlVFRhrI7PNgmRW1Qwk0XbShKmqtItk9r/+8KA/aYIitGWgJ3jNga0bn5UG/fzR48f8n9G5utMQzXXUxe0zBdSQ3bb7yIx1FDWKPNpuYYFCYNO3jR5olG4Q/m5rGts3/J+dHqL0O1qPbvCasSfPRAE9bauTrWlzX8ogsxcvOLer0Kp91T51m5QCzta7tRMbtEOv6pVOUkSAYBAgnQAys/3k60e8zyPrFizcaloVDRqmlWqgNIMR7++bSkHwvjPpet3HXvnJlPd55LIln1U1haPe5xpTkYoGp8+8b174nyfNT/f9yh9xecXHipOybY8c9V/1Hznx7vTr/me9m1/4gqg/d5rLPg69+tLoY0mlnatbI06XL77A6fZLZjSa3aJRsGVUS3jw4X/0X91abvuXH+3LAShFtY0/w9TDr/mvwRUtlGTpNWk4BcHOtx59Terf1L0HFzsyXP//Nz+b8l9j1i29wMrJcU9m0w5+1OtaiWqnSg62fXSOaOR5Eak8UAwHXjkzPUOYfr7knSe6nirVwPZznTd/450jukarH9xJ3nlqGNgFTtmzdKWmr9UgsDWhvx43rQFg40Wu+9rrtzRNq5rCmiq1iXJlb1u9yHzyd9zmFsXNha6LZFxUy44uzYIutDv++pjzgQe6gUcjFHm2M414hKPTarM/+cbyvprdqui2CQ9K6tT34n4/bv76qgxsSUt4fvkk88THCaraURLTLRqddW556A3R6hNJ+P63rqbhUsJjHThFqQbej11BbqwVWsll0/s7/duGoqoZKNVAwuzJrNY9YuIrKpSOprP94V8cMn+154gvsys/vmB6Vpo8xJVQsTfRsGDkLfTeKqRdvMDmLUGVRdJEFaeUrILAdmqb4zF9T69Fn56Y+RYgrqKFcu1OnXl/xrpG71xY+/aTnOvNS5pJANTn7chvnc/HI+kJelC1ebekFNQLTZvbLqgQR68nUqgrpBNAIahSgff5W+/zZ+sWLNzu/ZWtbLDJ+/8dRVQysASpBuOhqgZngnX3FJtm8PRPT5j33v/ATzM479zs8iS51IXPvorSBfMPP3+5/1pXI/xVmFqFue/90uJKvaZVFO4Hj70+6++/6AlPUa/0dSP5wWNHY/ODW7OVDe6lMEvbRFNN1A8/95lLzCc/8Vv+a3I/tWXx3NipZW2qilIMVHJIaQS/94nfqmXbqaJAOB3A1sdVG6TtU/q+2kQfteeKoAbvvv1vT9fl5HVzfVA/1/U36eA8TbSgcwbSQToBDATXXr9F+bIjphWdHa7CNika27zxUnPTDZfmisxKQh58+DX/hheu5am/Vy5WGQOlkqCbuwacxQ1gKPJVqW4i7eanV+T67pRTmPYTedtGv6fcWEUTw/1Mx1r9r9tDiX5f0ci6RsJtHeU4/DcggYgmLQBvJ5xQ9FXHJvy2RVFxPVRAvR4Qbf3rzg8wpDQhsQDJhbZhzubONvpJZqt4EbQj1jvl/RWRC6v1RV9vc+Nw3zZV7XdlEJcW045Or4sPHznTVXT0kMfgw/qh69/9Dx3ueHz1EJgmDQWQWAArtIrKrquC0LqS2V6gMkD+jTokoodipjGNI8uAGCtPKiGmqTrDUza2RssPthTQNuWhGbu69fE86AFBkkMZuHqfj3rjEX2Q59gisQB9J7QSWFUyaHoyW7VZwDpdpBWRSlvrMO+UhopyqFxT2kEvgxD5oG3Ka2c9MBSBorca9HZxj2dyArf95dQ7v5n10A9ILIBLoZXI3hUIbc/qz0pmVdGgLjKrSJ9ktltkShEIjVx3JUtxc37HIRm45wuXD1SUkbYpHj28qd+7mrTBVi1AcgCQWIDaC20dZVbTKCqdIBwJVGRpeMWFnrwuKCSPUjmK+37x1ow0Bq1H5W40In6QI4y0TbG0JnE4mmsqWr1WvnH4I7xeBkBiAQoR2mZIaBvILACE0UObHhj2v3yqayqHot7KW05bxQAAkFiAvELbsxxaZBagPlJrcyCn5XXh+ZRTAkBiASoltDbtoLQ6tMgsQLWJK0Gm+rIrGnMzVeUAACQWoEihbZizU+6WIrS3fWZRLUtzAfS7wKrYvXJc7RS8GminKWoF1QcAkFioIR8cWDjkUvDmLD86XnGhVYS2WeS66lxnFqAfCc/oJYHVjHpWYC0S2fu+vJjGAkBioYdSKlnTJyynV5qzuaJOpTUBYandG/ycDD5TnvRO9EBoh0JCuwaZBehfVKHj/u2HZ/ydIrLR6hD3fXkJZc0AkFgoWFKthFpZvS4kpkM13a0p7zMR/HzeSm4ZUd0yhNbK7GdXL6IDA/RIZG3dZImqZkJTisGTz73hpxW4rJUMgMQCsno2oto0ZyOpzQFsisngszcQ3cmiordFC60GfWnwlwaBAUD5aLIJyWo491ViSy4sABIL2YVVcjocyOrwgMpqWsYDqfXl1hPbyYKEdp3r4yGZ/dLnl5qrllFIHQAAkFioj7AOB6J6U/BzmFZxwmRIasddRmuLqnIgiVU1A2QWAACQWKiasCqa1wxJa5NWKQ3l144HUrvLVaQ2ENqRQGgbLpZJjVkAAEBiodfS2ghElShr9ZgMpPYR04rUTjkQWh3fe00rSpt7UB01ZgEAAImFXkirfjZoldqwyziM0npCO2IcDAiTwFqZBQAAQGLBlbTawT5Ia3+h/NntLoQ2lD97b57+ccXH5prP3X4F+bIAAIDEQmZxDUsr6QEIbRqhVZ9R7uxI1mWs/PgC87nfv4J8WQAAQGKhq7Q2zcwUARhcxkNCmzmHNijXJZHNFJ1lsgQAAEBiIU5ahyPSOkSrQAxj3ucRT2Z35VmIJ7Q21SD1AxL1ZQEAAIlFWpFWyMqkaUVnx/KkGwS5sxtNhlQDleRSvixVDAAAAIlFWgGyoKjsVk9mx3PIrPrjetOKzibumxJYRWWVMwsAAIDEIq0AWZj0PptNjtzZkMymmkRBEiuZJSoLAABILNIKkBUJ7FbvsyXnQLAR00o1SCSzRGUBAACJrYe0Ng3VA3rNRCBsYfZ2+P5k8ElDI4HEXRfz0KL/73UpNO3rZk9kx/IsxJPZ9YHMJnowI1cWAACQ2OoIayMQEuq0Fi9dkxEZDf/dlCdkE33w8NOJ4ZAs3hT8zPuQNO59NuRpu7Q5s6pg8JUvLfMnSwDoFafO/MbMu+AcGgIAiR0oaW2GpFU/G7SKU0mVTJ00ZyOpE3leew9InxyOPEhl6ZOKym7Ksx1pqxkoIsvUtVA0h4+8Yy4eOm+GsEpg//i7B8zdt15mbrjuIzQSABLbl3LQiAhrk26Qm4lAVp+3f657BLWiUmtn4RpKeWzWOpoFbFsSmSa9AIrm23/+sv9z9M5FZsmi8/0/f2/Ha2Zi/1v+nyWxklmisgBIbD8Ia1haGYCVjUkzM6o6HsjqJE1Tap9W/9XEBYkHYJlW9Hs074QJgcxuCtbdEaUVKL2AaWvBNc88/6bZ9sgR/8+S1NG7FvkPTPdvPzzjeysa88x9X15c2naRygCAxCKs1RPVKaKqle3zEso0dV5H8w76CkRW59Y20yVXXGLx9a9cRZ4sOBVFpQzoZxjJY/Tv7r71UnPLpy4qbdv+6LsHzaoV8/31AgAS2+7GPRSS1SsNKQFZJFWfl8P/T0S1tiKbSChDaMavUQciq/PwAdMlVxaRBZfsf/m0eXDHqzOEVbmxX/TEUdFZ+/dKMfjWV69MJcd5oqiP7j1hdnsfoQjw175wOVFZgEGW2ODmPBQI6oKQuBJdbc948DM6kApJ7W+R1TmxM8XDnBORDWR2JJDojqierHJlAfKiQV3bdh/xf4p77r7cDK+Y74uoRFZ5sfetW2JWXJnswUm/c8PwgsTfjxPgaHRYAvsn31iOyAL0o8QGr/4bwf9aMb3SnK3R2eDQzMDKqD7PR/+O1/0QnFf7TMkR2UBkm4FEd3zA/Oa/W0FEFpwgYVT08/DRd2blvUpiJbVJsPm1eVIPdjx+zDzx3Bsz/q7sfFwAJLaYm6odhJKnTFC/i6n988ngz+PBT+QUspxvB03JObKByEqen+q0blILoAiZzRrtVCTXVjm486aLzR3eJ+s27Hj8dV+ILd/5xjI/zQEAaiyxbW6y4bQAV8Xde8mkmTkrVFhIp4L/bzX28qPjdDko+BzTQ+POFL9ys6t+mVRkFZGlagH0mnBJLkVulZaQB0msZPaG6xYwuAugHyU2wQ24Yc5Ga+Om8bzSuI/mhqUzyqybOyIKNRDZNGkFetBa5mryiSQ5sorEKiJLHVlwhaKhzzx/0pz2fl7dmJcov/UPv/3S9J9dvf6Pm4QBAAZEYgHAicR2Fcnow5onsTe7Wr8nsqpasL7Td1Z+fIFfRxbAhTje/9DhGQOrNNmB6scmlVhJ59ZvXkVjAtQMHhcB+o/xlN9veuK73uH6N5uz+d6xvPDzk+Yne45wpCAXEtfvPfzarBqxerX/aFDyqh2KvoaXAwBILAD0mKCcWtr0gI1BznpuXnx2vda9tdv3/urJI+aXB9/igEFmnnzuDXNi6tex/6a6re3+TVy84NwZ/29LdgEAEgsAvSVtZQs7eYErtiT50g//4pA5feZ9jhZkIlraKk5k26EJEcKceid7NLZVoeCYufdPf+l/um0XACCxAOCWkWBwZW6CaOx4t+/96o13fZEFSP2Utv+trmkASitoF41dsuiCGf/fKWrbCZuTK3HV9lihtZUPAKA4zqUJACDERu8z6mhZj5gE5fOUH6uPBnsBJGXfL94KZPR8s2rFfLPPk8a4lAD9fdxEBtEKBlkkVsIaHVRm+ZEnskknXXCFpF3t8tLLp6a3Sbm/GuimD0C/QSQWoD9pZvw9Z9FYk2KAGWkFkBZFOlXO6r4vL/EnKvjWV6+Mrc86sf/ttsvIMyFBJ4G1UlxWnu3+l0+bP/ruwelpd8PbtH/ylP/39z/0SqoBbFkj0wBILABkxoGEjrjYjhefXZ84L1cCq4FeAEkF1s7WFa7JqokGomIqiWvHJaHvSgTT4E9720VS9798qvC2UBrD/dsPd5VOtUO3ig0WRXSfeG6KjgZILACUTjPn769zuC3jSb+495ljfo4sQDesPOqnZt6SgEq8NI1snMy1E9QlC8/PtH4tL8ngrRNT7xXaDoqwKv82jfAmicZqQJwmjwBAYgGgbO7K+fuNDw4sHHa0LamqJPz4L1/l6EEiiZzuYPvf8iORErp20cjDR87E/n04ins8xetzrcuivNc7b7rYz7uNRoEPHy0unUBCKnFPy0tdosN2MJxkl8FpUHUY2AXQRwS1Xtc4WNQak75MVxwvp/myBnipduxVy+ZzMMEZp9tEH8PSmTQH1EqeBFj5uOFSXcrJleBmkcu0Ep8mAjtT6N/pOOAsXJZMg8TKHpwGgMQCDC5rHC3nJkfLSS3C488cQ2KhI9GJCtoJqhXTdlHWLAO7rORpWttorVn795LMogZGKUL64I7Zbywkm6uumT+9T1q/8mDTCHV0u9PmCQOUDekEAP3FRkfLaTpaTurRIYrGkhsLnQhPGdtOTv/9lxdP//+Jk8lyU7sN1NK/W8nrlFt6Y1DOKolsp0WR3vC61Rbf+cYyc8/dl/tltFQ6TB/9WUKtfwvL9twL2t/2n5mYmQdLhQJAYgGgFD44sHDE+9FwuLzcebFpKhSE+as9VCroVzrlWurfkoiTBC0uCir0mv+eL1zui2y3V+HRWrHdZu0Kb7cisu1E9lAgw+22MSuKjIa3QXm493my3imirH9Tzu7ZfZ6Xep0ASCwAFM1Gx8sb7tWOKBoL9SNJXdQnn3ujbfkm/duPEuZ6Kh9VMmsHZ+mnpDWcp6rX6y45FNo/yXa0Tqz+bGu1+utPmE+atH7rjsdfn/6z8m/j6uJ2Oi4S2k5iLdmddwFaAPWBnFiAPuCDAwvXG4dR2IBGr/ZHdWN/+ne/Mp/8nY9ycGtCq7boG/6kA+1QVM/mlNo6r2GRsyWgJIjd8lX1u3pdnhctx0rkS5OnZkVnZ/TLSKRWcvjH3z3gyeRlfv5peKIBCXaSnFs7aYKNHndqXyujWnbcLGRR1I6tclmtvNgvdpFeO3lEp0kcAKoEj1wA9RdYVSTYWMCiezoP7P/4n0Rj64KEZ3dQ/D9cfiqMBDU8IOnBh1+bTh3Q74XFadvuo7m3R4X9beSyk5guWXTBDMnuKHkxOa42+ipRtNsvMQ6/wu+0nfpd7X+3dVv5VyS1k7xrWWpr1c/VLF5WYPU7SSoNaPmaNAKgDhCJBag/27zPUAHLHe7lTv3yADUq64LSAKyQWpm75dOtSKGim08HZanCKHIpyYpD/6ZpUjWdbCcBFVru8ZPv+dF7K4PRWbo6vUKfe/45M9YrAYyLcrYixx9K1B5zve9pm9pFVrWdqiErMbXtIuG2KREz2sLbH7WhLeuliK1+X/m7dp9VfUGD1+JmJ9M2SGC7tWN4u8ITHST5PYBeMYcmAKgvHxxYqJJaOwta/Pic5UdvzruQa6/f8kHW3/36V66i3FYNkIy6GMkefrXvCkmcRui3QxHb3QmnY60bas+rr5znp0H4opvyGEn+O6WHAPQa0gkA6iuwDdOKwvYtmvgAqs0zMVHWrChi6HpgUbfX+q4rCFQJWwlifxDJTUvaSgYASCwAJKWoNILK8PekFNRAlN5P/N1OwmhLYrmcIUoDoG4Iara242pErS23fGqIRgAkFgDc8sGBhZuMuwkJCuPa67fk2sZfTTHpQRkoWvdoxlfqGgSUJHqqPNNOUVE7cj7JgKikApukekFcHmp5knhRZUtaaduyzGgGgMQCQCeBlRhuLGFVE73eV2buKh69clZt1m4Ry04S2K3ckyKwGqTVLtKqddu/lzglKR/VaXskr2nKb2UVZ22rarVmEVH9rtokz74WhT1eAFXnQzQBQK0EtuH9eMr7XFDC6h7fvPXt8TwLuGzJZ0dMzojx/7J8vvnoRR/m4BfEj588bn578QVmOMfEACpT9Tc/mzK/fm/2GD5Ni3rvv108LXqf/MRv+X9+733v9xaebz5/yyXmthtn1gP+xFUX+jmcGimfFEnwbf/yo+YPbl9oli9Od3osmH+uucSTypdePhW7D3Hr+oP/daEfPV6+eK656XeHzIfPneNvb5Lfl8CqyoDWqfY57T1IHHj1TCX6g6S6iNxkgCKgOgFAfQR2KBDYskpfjc5ZfnQszwKuvX6L8nZH8iyDCgXFoZJK3/7zl83Wb16VW1psrVShyOolQY5rnoFT2r52U9S25Pl8v5yVqzJQdiBUu0FQV3vCKfHu1Fa2TFW7Zdjc3+gy9P193rpPh6ozqGqCjXRr3WEuWXBu29f94ZqzL8WU3UqzXQBVhjqxAPXhAVNu7dZJB8sY5rBVlx1/fWzG1K150BSvVmI1g5WLZUpSy6weoG3OmlaRd5vj0igksRp4lvbVfljqqfMK/QyPXAA1IJhWdqTMdc5ZfnQcie1f7KQAKxpuRufbUf4SQaJ57lh1TblvIZhuFpBYAHApsJLXB0pebe5BXXkrE0CxPPG3b/g/XY1At+IansYV8nFnghnLXKKUhj/+7oGOKRwASCwAJBXY4R4IrBh3sIy7OILVxOZ+WnFxJUCC19fuUBpBmWWutu0+6veN7+14zex4/BgHAJBYAMgssA3TGsjVi4rjex0so8lRrCbhSNv+hAN/umEHE13dYPKAuvaJcF944rk3zP0PvULDABILAKkFVuK6s0cCOzVn+dFdeRZw7fVbJODkw1YUjaC3aDBWeDR7FhSF3fH4635KAZHYerI7ZrILjiUgsQCQRWDLLKUVZZeDZaxxtTGU1ypAYiP1Vx/c8WpmkdXvqUyXXkP3auYryI/q1oarKtjJGACqDCW2AKpHLwVWPOJgGetcbIhqgELxSEDv337YLy91Z4I8TH1fEwM88dzUjFfQZY+kB3fomH/rq1f6ubBKJbDTAAMgsQCQiA8OLNzWY4GddJBKMOxqH674GK8zi2Du+fEv4ZRaoI9f63Th+f6EBWEUdT115v0Z6QhhCSISW380ja5mbyOVAJBYAEgrsCM93oztDpZxr6uN0ZSz4J4Vjbkdyyj5s04deSfVMu/k1XP/9A8EFmoCObEACKxlyvtsybOAa6/fMuRyP8iHLYZVjiOmisDmnekKACAtRGIB8rL9dvv6/Drv0/A+W826x8ZrJrBi65zlR6dyLmO9q41RPiwSWwx69a/IadyI9LQo9WD0rkU0KgAgsQAVF9ahQFib3uem4M+2DJZmuVrrCexkDQXWVRTWWSrByo8voL8ViEaeH5/6tZ8DmxVFX+++9TKmmQUAJBagotJqhbVp2g9Y2uzJ66Y0i66QwApXUVhndW3/+T9DYotGEVRFUh/de8KvOJCUFY15vgSTOwkAvWQOTQCQSVotk3KBNOkDFRRYVSRYlmcBQRT2oCuJVSrBd/7PlfTHkrDT0O77xVvmxMlfzxrUJWlVRQMNCFM+bZlToQIAtINILEArp3VNSFyTsisQ2MQRzGAig23G4WQADhh1sIwHjMMobPNGalSWidIBlBrA4CwAQGIBqi2tjUBW7wp+ppUvSesGT17H0vxSBWbiihXxOcuPjudZQFAXdsTlRt10AxILAABILEA42npXTomU8I2mGbxVYYGdMm6isNtcbtQnf+ejzNQFAABILAy0uFpp1c+8r7olfBq8lXoEvyewDe/HzooJrFibdzDXtddv2eRyvySvn7v9CvouAAAgsTBQ0jpkzkZbm8Zdjua4yRB9DQRWgveUw21xxWZHaQT3utwo5cIShQUAACQWBk1cXQ+Wyhx9DQRWIr2zggKrPNhNDpazzeW+ffSiD5MLCwAASCwgrjkZNxmjr4HAjhjHuaKOmDAO8mCvvX6LqhE4TY/40ueXEoUFAAAkFhDXjOSKvgYCu8n7sbGCrah9c5EHq/Zf73LDFIFlilkAAEBioZ/k1eXgrG6MmxzR10BgqzSJQVRgb/YEdjLPQoI8WKcRZqUR3PaZRfR1AABAYqH24ipRWheIa6MkwZO87sohr1UsoRUV2ImcAmsnanD6MPGVLy0jjQAAAJBYqK24SoxGAnktUwTHTGvigsyv2IMKBDtLEu6eCGyA8zJhyoO94mNz6f8AAIDEQu3ktRmI60jJa540rejreJ6FeAKraLHz6GTVBPba67doH5suN06TGugDAACQhTk0AfRAXG3UVTVGGz3Ygs3eZ0ue6GsgsJtMNQdwFSGwTh8yVn58gZ9GAAAAkBUisVCmvDZNb6KulnHTSh3IJXZB/qvEbk1FW9qlwK53fbyUPqA0AgAAgDwQiYWixdWWxlLEstFDqZO8juVdUJD/KoEdrmiLTwQCO5V3QZ7AjhjHlQgksF//ylUM5AIAACQWKiuvElalC0iEepkvOmZyDtwKCWyV81+FqiuMIrAAAIDEAqSX12Ygr71+1T4RyOu4i4VVPP9VbHY0laydjcvpZAYILAAAILFQVXkdCeS116/ZFYXc6smrE6EL8l9VWqpZ0Za3s3A5kfUiBnEhsAAAgMRC1cS1CvmuYfQ6fUOeGbciAish1wQGVU0fmAgENvf+BhMZPOBaYDWV7Ff+gMkMAAAAiYXqyKteN99bEcGTxI26Sh0IBHZ9IHVVZYsnrxtcLCgQWOezjakGLFUIAAAAiQXkdTZOUwcCea1D+SwN3trlYmGewBYSbf7c7VeYm264lHMGAACQWEBeIzhNHQgEthkIbKOiR2I8EFgn+xxUIHjA5TFV2oCir5rMAAAAAIkF5PUsEjinqQOBwG4yA1J9IBDYQgZwSWD1EwAAAIkF5LWF89SBQF6rXn3Al3aH1QcKmaxB+a9KIWAAFwAAILGAvJ7FeepAILADM3lBILA6thuN4/QByaskFgAAAImFXgjsiKlOqSyLpLWI1IGhYF/XV/RouB68VchgNaUNfOVLy8xHL/ow5w8AACCxULq8Nk31BjMVkjoQCGwhr9MdImFf6zD6qocTp4O3xG2fWWQ+u3oR5w8AACCxULq8Dgdy06zYlhWSOhAIrKS4qoO3JK0avLXFkbw2All3enwZvAUAAEgs9EpeC5mZyQETgbyOFyCvEjoN3qpy9HXU4cxb613LunJfmzdeSvQVAACQWOiJwDof2OMAPwLpyeuWIhYezLxVtX0O7/sGT17HXCzME9g1wQNKw+VGaupYRV/JfQUAACQWypbXZiA3VYtESt4UfZ1yveAg+ur8dbpDnFUeCMpmOU8NkbR+7vevYOICAABAYqF0ea1q6sC4aUVfx4tYuCewI6aAwUyOmDSt6GvuygNB3utG18fXpg5o2ljqvgIAABILZQtsFUXOf33uyetYQfJaSCkphyhlYnPe6Gso79V5PV/Ve71t9SJSBwAAAImF0uW1Yar5Gt0XuCJSBwKBraK0W8ZNK/o6kXdBnsBuKkJelfeqsln6CQAAgMRC2QJbxUFMvsB58jpRxMIrnvvqbOBWUO/V+WQUirhq0BbyCgAASCz0Ql6rKHKFpg4EAlvlygOuUgcKk1elDTBdLAAAILHQK4GtosgVnTpQRWm3jBsHqQPIKwAAABLbr/JaRZGTwI0WMdtWSGA3mQJyQh0waRxUHUBeAQAAkNh+Ftg1gcBWReR8gfPkdVdRK/DkdTjY56rVunUyXSzyCgAAgMT2s7xWse7rZqP0geJSB4YCuVtfwSPi73uevNei5JVqAwAAgMRCVQS2apHIcVN86kAh06g6YMy0oq+Z970oeVXE9VPeB3kFAAAkFqogsCOmOjVQJW5Fpw40gv2t2qQFvrhnldfQJAXrXMqrZtWSvDZvuJRJCgAAAImFygisoq8jFdmaQlMHAoHdZKo3cEvyqsjreE55dbpfNt915ccXMD0sAAAgsVAZeW14/91pqpE+IHkrOnWgaVrpEo0+ktdG8ADiVF4lrYq6kjIAAABILFRNYJuBwPY6GilpLTp1oIqD1VzI60aX+6Soq3JdP7nqo6QMAAAAILGVFFiJz7YKbEkZqQNVm6ihcvKqqOunPHHVTwAAAEBiqyqwVch/lcAp+jpR1AoqmDqQV161P0oZcDIQTZFWpQus/GcLiLoCAAAgsZWWV0UilT7Q7OFW+EX7PXndUtQKKlh1wIW8bnRx3DQwy+a6XvGxuZwTAAAASGwtBPYp09sBXJK4wgZuBXmvzkfn52BMLZ9DXkdMq0xWbnmVuP7zf7aAGbUAAACQ2FoJ7HAgsL0SuzKirxI+50X9c8jr5hx1Xp3siyKtfroApbEAAACQWAQ2Ncp5XVtg9LVpHL1qdyDqu3otrxJXVRcgzxUAAACJrbPASux6WUJLVQc2FCSvDeN4hH4Oed2qffXkNVOFhbzyKlmVtEpeyXMFAABAYususBKjXpXQksyNFlH3tUJ5r5OBvI5lkddgdq2RYD8yyavyW5XnSlksAAAAJBaBdSN3a4sonRXkvT5QAXlVysBYll/OOzUsea4AAABILALrHonrza4nLvDkdU0gr40etuy499nqyWvm6LInsJuyyKtkVVFXySt5rgAAAEgsAuuWMU9eRx3La9P0ftCW5DVzjddAXkdMhpzXq5bNb00BS1ksAAAAJBaBrb7ABoO2tvVYXsdMjhqvWeWVqCsAAAASO0gCqzJa++ousBWpOCB5zVwmK5DX1OkPRF0BAACQ2EEU2F7VgXUisKGKAxtrLq9NkzL9wUZdKY0FAACAxCKw9RJYRS23md5VHBg3+XNeG6YVeV2T5PtKGWjeeKm5yZNXKgwAAAAgsYMmsEOBwA73YO0TnsCuyimvDdPbvFdVUtiQU15TRZCV43rb6kWkDAAAANSIc2kC5+zskcBOGpXRyiewVvx6EX2dCuR1LM9CgkFbiWrWku8KAACAxILYfrvkqdmjta/NWgc2yH3d2cNt32JaqQOZ69gGqQOJIsiS19s+s8j/CQAAAPWEdAJ3Ait5eqpHa9/gCeyWjALbDAS2F9HXcdOKvuaaRSyYrKBr6gDyCgAAgMTCTIGVAB7smQiueyxTGoEnsInkrwAUcVXkdUuehXjyqrQNRV+HkVcAAIDBgnQCN/RyFH/qSgRB+oC2eU0Ptndc25ynZFYgsF0FXAO2Pvf7V5iVH19ADwUAAEBiYQbbb1/TIxkUm826x1LJYCCwvaqesMFB9LVr/q7KYynyqlJZAAAAgMTCbIGVUD3Qo7XrlXwqIfQEdjgQwEbJ26qc11EHua9d6+9KXCWw1HkFAABAYqE963sghJataaoRBALbiwkYxkwrAjuVZyFB6axt7f5d+a6fu/0KZtgCAABAYqEjrSjsvT3cgrEaCGzu9IFAYDeZNvmvpA4AAAAgsZCO9aZ3g7l2Jc2FDQ3iKnNbFXVV+sAuBwKrbR+J+zdFX7/0+aX+AC4AAABAYiEZvYzCbk/x3bJnEJPA3pw3/7WbwCr6+tnVi+iFAAAASCwkV8jbJVZDPdyC8SRfCurANmsqsJviBFbpA1//ylXkvgIAACCxkIG7eiqwCQZ0BTNxlTmRgUuBHYnbdomrBDZN5YFH954w+18+bZYsPN/ccdPFZt4F51S2U2k7L1lwrrl46Lyu+7Piyrn+/mRdTtnbnZQTU782+/a/ZQ4fececOPne9N/r+C1ZdL4ZXjG/0scwCdq3HX99bPr/Ox3LrCTpJ4POhNfPnnhuyu9bd9/am5z6Z55/0+/z3dC5Zc+BKhz3U2d+Yw4ffcffpqqfj/Y4X+xdo+6+9bLaXz/qdn7rerfb215xp7et3fowEls0rQFda3p5Tib8Xtmlv1wJbCNu2z/5Ox/1qw+kEVid5Pbk2T95yr94VfWE//afv+yf7OKeuy/3ZS3uhhfen7ne/tzyqYtSL6fs7U56U9zx+Ov+PsYeS29/xbxgn+sqZtrP+x867P/05dy7oH8mcgxdiFG3fjLoSBy/t+O16TbScbjhuo+Uug3bHjnStr+3Y0Vjnrn7X10aKwJlHXe1nc579WGdj9/66pWlPTDnOc6W0bvqnYYWPc5q+7L7bhq+9/Br0w9qL718ymz95lVOl3+OgbSs6fH6X+72hQ8OLBwx5ebBjroQWHttN5FUDQmsBnClrf36UiA+YamtItouK4JCUYN4AXrfyXLK3u6kYpfkhq7v6gIuAahrBMUKrITkvi8vcR4Z6tZPwJjjoSi/lZ1eyEjqc867pulcCZ93ZR93bbftw/qZZT96dpwj/1/XB7Be9900nC64XxKJTc9NPV5/EllcV+L27PIEdszFgq69foseEJpxAgvGe9peYCb2v+3fyCRA+v9+QBHY8E1ZUqd9G75m/vRFcN8v3ppxs9SfW23wkdrsp242Tzz3hv9nRciKeoXdr/2k31F0dV7kQV1iGhVW/63FXx/zHoAWc9yh8iiFQ9d4+2cktvcMV3njPjiwsGHKG8yl0NsGh8ubkQerHFgE1syQu+iNq+7ERXIUnYy+LlWagv5ux+PHZohsnSRWbxLuW7ek8Hzlfuwng3KzV45j3DkSTbWRqOqhKNyPOO5QRXSNLvI6jcT2mcSacqsRbJ2z/OikiwUFU8oOh2/4GsQF/Y0Gh4RRBKld4r+ilzbSVNeHEEmK0jDsa86qDIyxA3Wmj8OVVP+IImm0x23e+ec4H6DSqd8oj1MDlOxrfKFtqWouatFtGE4Nq8PgMkh5Xzjyjjn1Tquvd3voR2LTsP324RpsZaPEdY0VJd9ZcmCzYAdXSJ6+9oXL/YuhLpBP/O0bfhK6Hbxw9ZXzzC2fvqjjzV3L0Wtv+3v2BqTfXXXN/FlPozbCEhW5w0fOmPsfeiUQt6HpwVL6/oMPvzb9utBur6vlxImNi/Wlu3idmW7zODSoRYNK7BN+FEVq9cpeF717vO1td5Ps9D1dQJV36K/v1sum16N8Vls5wb95er+zyttHDczqdhO1fUoiEkVtq4Fq7fqW+pV9HSeZUbtqW7T9aitthwTfbmfS42uXreXE5VhqeRpNHHcDyduHwm1tB35oXWoHtdGPvONjI403etuRpI2j7f3MxMkZ4mfTT9JEhfS7T3rt83RMFQE7yDDttmVFbXEq5jilPSbh9tE5bI+9vrtk0QV++8RVAbGjzKPnvdpGy5vrSWnc6HNXbdjtHEpzzUl7jY+7Jtj9ynJNaL2BOuk/lNtrnv19SbnaxMVDUpbjHEXt/fTEm9PtHtdWuu6r32l5GuDb7voVvp7GPeCof0Uf1mzfV9+K+93iLaGfWHv1NaZN8f0S2Wt2/X3bvNhN985vmnKisRNzlh/9D64WdtmSz97t/fi0/qyZuO649fLcy3zJO4HDT+yXREZx6qT+wV++Pn0CLZj/IXPkxK/Ngzte836+a3793gf+v+mn/l8no5YRd5H+k//7kNn7s5Mzfi/8uzoxfVn2Tv4F81vPjj95+lf+YKg335qZ+K7f0fbo8+bb709v896fTfnrCG/v8sVznS1nVkdztL7OUaYP+csLL+O/v/hP/t/HXcTVdpIaXeR144reaLbtbg34Ou0dk5Pe9n3yE78Ve0Pq9L0fPNYSdG2LbnI3/e6Qf3y1XeF91p/Vv/T34eMaJ8w/eOyo3w/aXbzVN7Qtn7jqwln/LsnTurQ9ald7sbf9TP+m/jUnuJknOb7qs1v/26u+wEaPYzhKru3SfkWPRd4+ZPnxk8f989TecLX9W3/4qt8W9vjo7w++eiaxfGqbdQ7bYxhuZ7WT1rfU2x8dt7AExfUn3Zz1O6cjN1XbV5Mc/3Y8Gowwn35oGF7gX1/a9RG1VVj+/uD2hamPiY67+qL6pNonfOzt+av9jdun7//4iHnxH96e1Rb6f/2e+re+H25HV22oYIO2udM5pGXo56przoqsBnKF0zBs+6a9xsddEyS17a4Jaqffu/Yj5rxz58SK5Xe864kEVtsb7qP6fa1Hx7Hd9SB6X4vru3mOc7Td1e/C7R5uK23jeeedM92X9fe6Podzu201Ftt2t9340fhz1rvOHfDO83B7hPuYPXclyuF2JQZfPxoV2Y5xx8ubjnI3byinZqN9XRE+kbqNetcTZTSaoJMvHMnSBVBPjdGohF/u5eGz5V50MnZ6TaIb1fCKC2ecyNET2+Vy4i4cLtbXWWLPmSUnaicdhz/89kv+DVAXyHD7at2x0cHI8Tz9zm8SHffTHf7fVk443CECpu0Nl80KI0m0g7miEc4b/Iv9OTO+GxUbu3zL8UBg20Vdkh5ftW84LcNGxLRd4WiW9sn/bqSyR94+FJaM6HbF7lvCFBLd6Lqdw1pWt+9ov8OlgcLRoLjzut3xz32NCm7e4euGjWilbWt7rUpSTcCW0Qr3+2h/jYsUXx2SKVdtGFeKTMuRuEWvA62o37GOb3qyXOPTXhP0b3Hnss6j+7cn6yu6HkTLgyUlz3EOP3x3W4Z/ffvbmde3aEWI8L7G7bcfVPCOSfjfdGzVR3RNCh9jnbsPRs4F0gnqx3Vd/n2qpO046TqyayPIKz/em1G19kTWyWNfB9mbYrSkjK1TqotA+AYbfZ2i74Uvwv73gyLVuoh/5xvLpi9s4RM4zQANV8vp1fp0Qw6/7ooKhz4St5Ycz2/7irvIfqH1ffHWS/3121eB4XJZNsUiXINSxzp8Q20NvFkSm7pgl6P9lCxc3CEiZ2/iNwavNPf5Ua73/depSSOV4Vey2p5oqa/oA53+rGNeNNo/W51CP+2r2jsT1gWOCkrccdMx6SYRUZHRMQkf2+h5HXf80xI+lzo99HV6Jdst8ht9cLnDf5hqtbV9QxE+DyWhqgNrHzb10XLCD1I2DaSINvRfh0dESlU9wvVv9Z0Hd7w6fUwlVjoX2qXB2GXY/Y67xqvfdaqxqzbSeWMH49m3I+Ft1XaEK5D46R7edoYJ1/0N98/wQ1lrfy4q7Tjb/Ys+fEe3VakU9vV/HqIPaDr+4f6tbQ8/NGjfwoN6icTWj2bJEdJ2XOl4eX6io1IJeokuOuGZvXTzi5aqCUelok+dcZGK8Elpc55gZpvpAnpnlxnV7APEH333YCIRcbl9/96TcxuhtFHLqLCE62fa/w8Tl+dmb4Rh9nW5KejmrPZSP1V/lVyqgHjSfMDZUjB7FqNo7qhu0p0iTy6RUNvzUPv5/W9dnWhyi2j7C+U7R49bt9JmNvoZFce48zosSnlv5skeIC/I/AAXlRJt/y2h3E37MBONkGbZL1dtGI3y2ejcDLnyJPJrd1/RMRoYJ8GdrvF61d/tHFRb2ZxQ/X/c/oXvFRLUcP9stffi6fZud11JW3/bxXGOLiNuW+31Jw9qn/CDTlzZRK1L5/GMa+Qvzm4rEls/hjoNMAsmHZgoYTuajpe3qwqNG/fEu6LRfjBXVEh1I9Ur8OgNVRcS3YzDT7swE10UJWNW+jvdrHWRLWvCA93g4rYlLq0iPOgl+gq+nWRGB5LsnzzdpY8O5epD0ShNuwFl0Ty7/S8XXxXCllLLQlSy1YfilhV9RTlrOd4xDJ+7GsTSrr3DbedXeChY9P3JDrYf7vjKvJ0shPdJ+x/XH+fFzPKVZTIDV20Yldp2s9tpGbpu2O3vNAA37TU+jhtjUitaA6ba992oGLeLrkavffbtXZnHOTp4r92bkG7nUjeiExK1S0OLppC9FLoWkU5QT9Z1EVXVbn2q4G1oaGYwVxMdvPjs+slrr9+y5ZcH31rfq0aN3rQtnaok2ItB+MnVvgK3T7BKnFfhfsoWJZXGs1FAewHXk3f0hqb/16foqXWHr2m/fI1EDh97XZTtcY7mcdrt7Ua7XN5wNC5P5CPatx9tk2N7PJoXWELke2mOEdnRG++qFMet041Vx6NdG0Vzek+9k72NVEO43ch4+1o5/Mo8zTTaygWN7n+nB4lOv5tFTrK0YfSBoDUZxDmJrhsur/FxXN1mOfM6LCfajp2uW9H+qd9Ncv9wdZyjba+HkCznUtrrUbtc4ihhUUdi0zFRke1YYzpMMuCJ5bgnmJLLkYK3Y6O3Hs3Y5SoPd7P3ab7w85PDvcqLzYJeqVw8dO6MHMnwSWnzi/QkqWgBMmtmRQAkq3HRV39e8KCqRDR/VEhui5bYTqSJiO5OcHH2b9Zd0k1c9p8THQaKzZbn4tNg2slBFro9fCa+0YYeSvMeuyz4KUjeR+dC+O2DrilJJTb6ANJp/6P/5iJtJ0sbRh8I5l1Q72JKp3Icg6QPkEUd5zTLyXsvSHstQmLTsO6xKbP9dgnbUI+3pOFtx4i3PWMdviPJnTGBQCHbYcxTnsje7EJkX3x2/dS1128ZfeQnr+28avn8xtwaXbQUjW0V439rOmoYvSj4I3C3H/YHfvVSvKomsPbGrDqSnQYP2fzR8I28TnOhr0ggaHqdVuZ0obZmZEcZPP8cP6o5qH1W8nhJl1emFy841y+RVWSqkB7kwn3/VFB+rA4PxVVpQ6g2cVMvxz3khAexIrHpmR5F32M0RWtbiZVUSi5NK62gSJEddiyyE57IrvrRzsM7R/+3RrNunUM3enuzl7Tu818DTs1IXlch9zoIQfR1chGEE/RtvdROrwRdVCU4kXK//O+3EYVDkddu4e3TBTn8Wq5T8fnSbhKRSGFrgMriWveh8L6Fo32dXsF22q5oxFmvS/MOYKmCHHTqt2HiXuPnXV+WNtRMTWG6RXJtUX0FP6o49iB6PbAVDpJcV5IeA1fHObqtnR6WkubrJjlnoyX+ksAjT3oeqch2tKKxHQik8mbjdmatdiJ70BPZNS4WpojsD78/ou0er3pnkODc+6e/9GuaRgdbSBAUndUFNZqoXyXaXYTyXJySEh1QsTsmJWPGjWriZEcpS3LTSzttbbtXXHEjt8MX+ui2dcqHbZUXOuYPCixycJBu7OG+qHV16o9+beMdr/mfTsell32o3Q283XGLjpzvJvrdqkX4pea845Z2sFVa4vIOo6KXdJ/i3hS1a7csKRIu2jCuHnSnYyqBPRVMvPBkxhzNMh8g0/TPpMfA1XFeEcmBjV53w9ePPNOAR8/ZcFCj3TlgB04jsdmpklg94InsUDeR9T6jppVeUGQNWW3HTk9kFZVtOFrmWlOdPORY9oUuEjrB4m7aEodwVKBbhODUmfedbFu75URvDLoIRcVJry3TynaW7V4VmfbQFj2PrttKXvTCG47axt3Qozd+/X7a0dZqn+hgA38SgN1HI0I+s/i6Xo0mEXS7z37/8dZVdKmmGyOR7h+1kS/1ZRVCtwPSwgOniupDuZ6kI31J2xMnllZ22mEL6YePT7uBK/5Ndfthf/+fKEic7GCXuIfkpG8m4kapq2h8tB3sNMRhutUojWtLV20Y7av+dNeRfmYnH4iOyq8a0XbUvkbPdbsv0X5d9nGOvg3T96PXwNaDx2Gn56zWE/cQbydd0Tlg68RaSCdIy7rHJjxxnDTVmDlryBdZY0a7fdET2S0ahBV8f02B29Q0rais1rVVg8wyn/Srm1NP7BlXRHafqc5MZbMkLHxzUTHrcGFpWxQ6fGJGLzLRp2c7g4lyyOxrnCQDOJIuJ+61kC5Gdpvj5jjPs75uF91onquWo1qw4fyouKf9aAkle1MPb7s/7aK3PLtNWaMGElA9sKwKiubrz9E2iu6r9l/bGJ7o4o+/e8D/ns1DnfjFW7PqR7oc3BSHyhSF53vXjVSyasvlaOKEfb94a8aNws+dnRGpcdOHXGIrhYQHqrUeLE91PG5xqKh7WIxaN8/T5sbhj/ivq23qS7g/rch53JJMdhDmiylfz+v7Kk1k90nbruNuHyQPBVUQomITV9t4puCcjdLpQUf5irrGuWhD9dVwX9KytM06r3RO2wkCogKbZTKIolG7RSvZ6A2H2mppMIFAtH/quPTiOOvP2q7w93Readt17VLAwl4/7H0u6zkbvf7ba5GtCqO0oGhKXvj6g8RmY2sgg1VgxJPqRzy57lpn1RNKyfdaTzAlmhtNsbm9EuU13romg/baFaw/i8gqIvuU6f2AulgJC1+YbMSw3avFuKLf9hVv+CQNC4QuQkkkNulyottstzv8/7Z8T6dXpK62+wZ/5qn3Z62r02t1/yYZU1xcF/DoVI3RyKsqRKSpMWu/bytNtIuyxImdtlGDz+yN2vaPTusqeqCOjtvonYtmTAlqH0DafT86o5erPuQarS8s6Hbfwv+fZLvsIMJw1LZTiTR9/2uRguxJjkPWm7/6SdrcQVugPyyWnSKkw23yWKMPr9Hjbn/XRRvaQvfRSGu7tylxhfGrhNpT17rw9rdrE+2LJnFIG1V2dZzVx6LT6/qDCUMPHfZhImmFk3bX/+gMYXHTdYe/H76vkE6QjbGKbc+2ThMgxMjsuPdRhFOfoicZaATCr+jsPu+zyfukGmjmiexEsK2TaU+OTv8vWQjfmNvJgy7anb6nC4AqDnS72Gj9f/KN5bHpBPd0GPRjb1bRCF1cxC7Jcuw2t3tNaGd0sVE1F+vreoy9bfHrZHaJZtkyZWrvuPVqnbboeewNzvs9HYfwerpJo50us90y1ZbtBq20BHBx19nI/DZftyQ2gjRjWxNE+5L0E61PudrdIlZqT30vbmCJiz4UbvtotDcrWm+77WpNjZysb6tt/FmZOrS5jf5GJT+pcKeVXh2Pdv0kzXHvdG623o5cOmP67LhzsH2fudBpG2qbdd3s1lft9XVGRLHLtTvp98L71KmfJunPartWWcbzup53cdsbPXZFHWf78Bp37dL/6++1L90exJJcv5LcQ+32RvveHHw0I9tv32aKr8OahpboqQxYSoIcVu3LOlPea3tt57j32aufwUxjHXliz/iQSVltwRYKt69HothXWt1eQSX9nh/1OTpzsIwuMtGLZBy6GOg1kH3ynevPpjRvxkVZr8RVSFzLbHdBTrKc8H4pcmXrC0ZnTOrWfmnXlwR/itOjM6Nnane1YdJl2sER9jhEt9+mecyNmblGAwfC0QbNtJZkmUnQ8dPrMdveSfbLvjJt3aiTlSBK0k/Cy1d7hwvU2+mRk0SB8vahTnWC82AnyrDHK7pd9pxO0kZxfTLped1tuccTlIlTvneStklz3KP7NDcot5b0TUC0ff08WO93222nizaMXmtsX+00I5ira3zSfpqmP0evB0nPuzKPc/g8Vu3eeefPnJkser2MTtqR9voVvYd2214kNrvESvYOVmyrMotsSGiVBnCXaaUDlPn63krtI4HUTroSWYA0tJNYAIBBQAL5H73roH7qIb9TeTSNXwgHbcq+XpJOkJV1j0mytlRsqyR2uXJ1PXlU7uqo91F4am2wj5MlbPtQIM6KcCv1QJ8HJNXeZ1qmlSNryikbBgAAMHA8ExpMp9zUdvny+rewwPai/jmR2Dy0ylsdNNUbcCTB25AnIhslyGNdF4hmowf7pNxdpR5MDxB7Ys+4hH09HRFcQiQWAAYZv3xWpFqGUhzCJRGjAyhFNJUAia2HyErqdlZwy3KnFlRYaCcDqX3kyckdWv8DFXyQgD6QWF2wt37zKhoFAAaK8JTgSeg00BOJrb7I7jTF1l7NI7Jrg9SHQqiA0E6dfGfF5Msn7xh+48zHzXu/uZD+CM4u3t3ywQAA+hWlCqh8VqeZv5RCcMunLyo9AovEupVYRQGrWpB/KhDZ8aJXVAGhNcdO/V7w+RcILWTGvibLWmEBAKDfhDZcSSNpxQwktj4iOxyIbFXZ7InsprJWFgjtvab8KgcILQAAwACAxLoV2RHTGl1fVcaNpqgtML2gjdDasl0jvdpxhBYAAACJhc4iu8m0pnStKkovUFS29PJgQaksCa1SDpq9Ftp/fOsm+isAAAASCyGRrdpsXnGMm1YZrolerDyYJUxCq5SDRi+2QRFZRWat1AIAAAASC/UQWTFmHNeUzSC0Pc+fPfPepb7IHnrz9/0/AwAAABKLyFYfCexWo9m5eiizgdCqvXqabvBP7zbMYU9myZ8FAABAYhHZelAlmW0E7SahbfRiG2y6wT++1TSqQQsAAABI7KCJbN2mR5XAakaszWVXMmgjtHYwWM8mlFCKwYGpf0N0FgYWFTvf8fjr5sTJ98zd/+rSntfQnQimvdQUmZa5559jlnrbpQLsSbdPk1toOYePnp1Cc3jFheaG6xZMT7EJAEjsoIvsiKl2+a12jGvrPZkdq4DMNkxForNKN1DaAcCgoFnMJHxCRc6/841lPZPXHz1+zC++3okVjXldZTs8xXAUifA9d1/OgQdAYiEQ2ab3X01RO1TDrbfR2Uc8od1VAaG1Mtvs1TYoxUCpBpTqgkEgKnzf/9bVpW9D2vncFUm978tLYkW227KYchgAiYXZIquR+IrIDtd4LyYDod3eqxJdIZltmFZd3p5WNpDMHnrzNlINAIktCEVe/+i7B2f8naKtN1z3kenpLw8fOWOeeG5qRpS2XdQ4HFkW4cirUhR6NRc8ACSHhJ+yaUnfzaZV2qquSByV47vPk/KDfs5vS87LfwpbfnTS+4x6f9RdajQQ7FK54NxjZtnQ/2NuXPx18/FLHvT/HwDcIjkNI+m878uLfYmVcOqj6Om3vnrljDndJbThvNnpvw/NAy9u+fRFZ+UYgQVAYqGtyE55n9FAuqZqvjdRoV3vfRo9kNkp7zPmfSSza00rl7dUzj3nbfOx+Xs9mf13vsz+1ocn6esw0Ege7UcDw/IQHngVlc4wSiEYvWtRIfujfQjvkwaEAUDvOJcm6KnMjnnCp8hs3dMLwkL7gP9p7dd2o4hzyeW6PJFVqsOuUKrBSNkNIZnVR3mzB6f+DSW6oNJIzp55/uT0SH2haKYiknfedPGMyGYScX3ib9/wB2BF0ev/O7zluYh0vjR5qu1y9PeK1GoblA+7ZGErJ1b7tnvvCXP6nd/4qQdhVHlh3gUf8r+rbbSVCdQ2Tz73hnnaa5t2g8m0LrVTNPdW67v/ocP+n+++9TI/ahzX9g8+/JqfqkEeLkDK+z1NUBG2374pEK5+pDUgTD97UH/Wk1nlyiparFnBepI3i8xClQVWotUuqiiZk4BJcLvlxO54/Jh5whO+bmSRtbhlSwo7SXY0t/VRT2Alsd3QtmkbrYQmiSLHDSKLrk+pDlHRrcKAOQAkFlyIbD8M+urGmOlRhYNAZtcEDwsNZBbAmG//+cuJXotL0sIyF5UtCaZEMyqZl3iCeXzq135UNPz7kk9FPJMSN7DLYqPGivQqKtquvquk9sEdr3aUUi3r3395sf9T64sOElsVLF/L2OftU/jftX7l6Vq0z9/b8dqM35fI2u2LtpkEV/8OAEhsnWV2k+lh1LAkpgKh7UmFg6BEFzILA02ceCoCecunhnzhktxu230kVnLDEhsVzLioZFxUU1UD0qQqJC2xpfVqP+Je31uiEdD71i2ZEbWV8N6//fAMIY/m2mpf/vi7B2bs09ZvXjVDottVQVB76AGiU5sBQGcY2FVF1j0miV1lejA4qUTsK/6eDAgLDQK7uRftfNEFPze/s2iz/2EAGPROYmeP+NerdCuWEiqJVTfRDEuaFeGojOn/lZYQZl9M3mwnJJKKVCri2Qlfvj15lFjHVSZIwrzzz5mx7XGDxSSearMZ644MQNM+h9tP0VmlGejhIPo9BBYAie0XkZ30PhIsjbTvd8uRvGpAmGR2ZzC7WVkyO+59bu6lzH7y8v+D0lxQOooeRgcqfTEmT1WidmeX1/5RUYyKnSU6EGv/ZHrBbIn1Yj+Kq+3qJLTaP0VTs1QR0HoUMdU6Ru9c1FaWo6W64trvni/MnPlLebLhbZKcd4oaA0A8VCeovsz6I+0HJMVArPE/qj3bGhC2tYx0A8msJPaDAwubppVm0Cxzp201A6UYMGkClEE0YihpaxdxbSelZ2V05tStijZOJIiyqkpAVrStyqm9IyTSE794a1aeqlDUM0uuqfY7vO+tslpnfPl+6eVTicuGtaLQl85K3Tj7b5fRIQGQ2L6W2U2e2G0xrYjlyADs8VCwnyPefk/6MtuqbjDZzzKrSROWfOQvzUu/Wsd0tlAqKi/V/t/SvbRLUgHAF7iFyV+fS0yVtiB5jYta2gkPJIvRPFQ/Yur9fpr8W4uWE63MkAWlWERnE7N/n7Z9AQCJraPIKoFt1JO6zaZH9U97RMOcrT9rp7sttLpBL2VWkyYovUAy+/eezDL4C+pGt5xVMbziQk9GFyRe5n986JUZAtjp9bvyVxU1DX//+Mn3Uklsu9JjEs4liy7whVlRVFt7thvKg42rM6vf7VRRAQCQ2H6T2clAZrebHkQLe4xNN1Ab2HSDyZJkViJdWvkzDfjSwK/Db/6+OTD1r0kxAKdEo6DR4v9h2hX5n15WIHOWr33hcqdSZiOpYfHrlkOq0l7dtrsTmvwgvE/+4K47F8VOaJBk+9uJrrZRkWPl3wJAOnj0q7fMjgeDv3oyKKnHNEyruoEGgz1V9GCwYADYKtOaKniyzB1VRPbGxV83l8777/R5cIYkMxyZVOSxXR5rtPpANyHulA+r9Sg3VCWukg64kjiGpVji12lSBf179PV/mtSFuH1oV/7qUJd90P5+7+HXZvxddHYvratbGwMAEjsIMrtrAFugaTRJxPbb3/AHhBVYqitUmmuDadW6LQWlGPzzy+73P1QxAFfcGIlmKiIYjV5KNLvNwnXD8My0AEUd4wY9+dUCHjrsL0+SOZGixFY09aDd7GBKI1DqQZgsr+uTDNpS20T3Idp+iuiG/07bckdMxYPo9wCgOx+iCfqIXX8/6X12mLVXK81AA6OGB6wFLvA+nzaK0K69uul9Tnrt8YsiVrR569t/u+ne+X/m/fGdoJ0vKGMHLzzvNXP5/L3m3feHzFvvNujzkAvldv7Nz6bMr9/7wP9//VRE8Mjxd80rR9/xByLt+Otj0/8eJlx2y766txUPTnsCqOWed+4c8+v3jV+G6klvWT/4y6Pe986WpLqjeYn/u0lYvniuefEf3jZvvvX+9N+9+A+nvOW+4f/Udkue9f+nQwIqeVWO7IL5M7Pn9P0ZObaeiF8Sqec6c11vm0/89oX+ADj9nt2faNtofauumT+9jB8/eXz63xT5Xv+lxX67aHvmmLPlybQc/fmm3x2iYwIkhBm7+plWRFJluUZM/5fmasekWsJodrCCcmc/OLBQ7Vz6QLtjp37P/Pz4/06uLOQiOjVqHMo/lYiGX9FHp51V5PLBh19LPIpfYpm2NqrkUa/mk6YhWIGNKxHWbcauJO1i2yacCiBRVQ1bEZ22NrqOuO3I0i4AgwrpBP1Ma8IEvfa2r78nB7AVrGAqd1YpB03nT4LLj056H+XKKp2jtCl0lSOrXFlNmACQFQme5Cpu5L6d6EBiFZavuOoDrWlTF/vf7/Tq3p+swFtfFlHTNio3tds6rFyqNmy7GreqjhDe9qhc6ve03+3WozbQfug74dm82n3fn5ghsg7hehAcwCBBJHbQ2H67RvcrOtsc4FaQaNq6s87zWj84sHDEtCoZlBb9VgUD1ZYFyINeZ78URAUljNFcUkUcT515389P7SZedmIA+2pfy9PgKpdTq0bXIa725FLrSSKGNqVAwtuu/JYizJrYwEZ/9T3JaPT7itwe95d1tm261ba1JP0eACCx0JLZhiHVYCqQWeepBp7Iqk0VAV5f1s7807sN83dHvkV6AQAAILEwMEIrkVUYrznArTBmWpMojDuWWQ362mZKGmQngf0fr9/HBAkAAIDEwkDJbMO0IrMS2saAtsJ4ILNjjmVWEVlFZkuJev/8+NeYthYAAJBYGEihbQYyu8YMZrrBpPfR9L7O8maDKgaKyjbL2AFJrGQWAAAAiYVBFdo1IaEdNGze7BaHMrsmkNnCHw4owwUAAEgswPbbhwKRvWsAhVYCO+YLrYNBYMHAr21ltCMDvgAAAIkFmCm1YaEdpJQDyexmRzJbSq4sIgsAAEgsQLzQavR9M5DaJjKbSmQbpoRcWUQWAACQWIDuUqvorIbH62cDmU0ks5tMKyqLyAIAACCxUAGhbZizubRNZLajyKp9dpoC0wsQWQAAQGIB0gutHRxmo7T9mEsrmd2QtZpBMOhrZ5HCj8gCAAASC5BPavs17SB3aa6i0wuoIwsAAEgsgBuh1eCwdX0mtBLYDVlnACu6puzBqX9jDkz9a/oeAAAgsQAOhdbm0Q73wR5Nep9RT2bHM4jscCCyhbTD/3j9Pn9SBAAAACQWwK3QNgKhvdfUP0K7y7Qis5MpRVaR2KeKEFnlxT732n8wZ967lL4GAABILEBBQtsvKQeqYrAp7S95MquI7IjrjdFAr596IgsAAIDEApQntJK6OlY5mDQZUgyKElnyYwEAAIkFKF9o6zwF7phJWZIrmK72Adcb8vQr/5m0AgAAQGIBeiCztg6tIrTNGm25BFZR2V0pRHbEtAZ8OeONMx83f3dkI/0IAACQWIAeCm3DtF67S2gbNdnqLaaVL5soKluEyEpiJbMAAABILEDvhdamG4zUYGsnTCsqO9ELkVU6gdIKAAAAkFiA6sjsUCCyVS/XlWqSBNeDvTSTl2b0AgAAQGIBqie0zUBm11R4K8c8kR0tW2QpuQUAAEgsQPVltmHORmerWNlg3PusTZIn64nsPuNoQgRyYwEAAIkFqI/QSmY1PL9RsS1TfuzN3UQ2mNnroAsZVzqB0goAAACQWID6yGwzkNlmDUVW2/xU3pVpOtqnX/lP/k8AAICqcQ5NAPD/s3cHu3FddQCHT0oQFaKKUVGDWMA4C1jWeQCUyXoWtVcsWMz4CZo8QewlKztPkBmJHYu4C69YdLrrAgmvWCCRTAEhWWqEC6oECGTu3zNup67t2D333rl3/H3SjJ3Ec+2eaaVfTs895xxxilZ//2Hx2WqaHkbQBGsncTq9Oe3iv5neOxyn6VZdWW6/8Xn6/pt/8O8CAI1kJhauYrpuNmZmm3Ai2GtnZGfLCmJ9bCfnG1lSAICIheWI2YjDOPJ10TeB7RURu3HZF5S0rGBy697hqjceABELYrYsu0XIPn5NyEbEdjO/z2oRshNvOgAiFpYnZjtpusxgsKCfILbe2rskYiNgc2djN4qI3fNmAyBiYTljdifVf3BCrIu9X4Ts5JKQjS23OhnfY7uI2C1vMgBNYncCKENE5HSNauxocFDjd46lDM9f8zVPM7/HHW8wACIWljtmY2uu+8VncVTsUU3fdS2NeluX/Pk4+/oA0DCWE0BVpjd/xXrZRzV9x1hWcO4s8PGLu8cZ1x3funf40BsKQJOYiYWqxD6u090DIgAnNXzHHYMOgIgFyorZWGIQe63uVvydumnUGxhwAEQsUGbM1jEr++Tsbxy/uNsx+ACIWCAnZMcp1q7GiVvV6Jxzk9cg85oH3jgAmsaNXbAoo17c8FXFOtbYFWE11uQev7gbOwvEYQc5p4pt3rp3OPSGASBigdOQjcMRnqXyj67dPP757w5KCNjg2FkARCzwtZAtY7b0K375zqvJr3/2cqWEax4UAXvfmwSAiAUqC9mV2/9LO/f+kgZ3Py3rJ7OUAAARC1QXsoO7r4qA/fNJyJbkZG1tEbFH3hwARCxQash27/wzPfvpJHXe/HfZP812EbBb3hQARCxwlZCNm72ev+7LYub1yY//VkW8BrOwAIhY4Nohu5XOObig8+Z/Tta79t95VVW8njILC4CIBb5RyL6Mbo01rutvH6X33v77yccaTIqAXfUGANBktw0BNM/xi7srv/n0T3vfvnX8qKZwnbfpHQCg6czEQnPCNW7q6haP92YfF2H31r3Dx94NAEQscFG0dmax+mD2sbPgHylO+HroZi4ARCwwH60RqmuzaF1rQLTOi3C973hZAEQsCNaI1Hdnwdpt+I8cAXvgnQNAxMLNiNXTGdW1WbCeft4mjpYFQMRCi4O0k87/X/xnf7+tsSpgARCxUFFIRhheduTqyhXi8UHm628KAQuAiKW10dhJr7/B6Cpf85OSrkP14iauh9bAAiBiyQ3Ji2Yfu6956QPRyDVFuG7YhQAAEUsZETtI0w3um7btEstlu4jXLcMAgIiliqBdmYvZeMRNRKe/t2KEuK7xZ2+lzT+upskvfuu/dwBELAuL3NOYPY3cO+nLG5WELl+J1+1PfnTy8UR/33/vAIhYGh2683fgn8ZueHcucrtGavkc/fdbaXj4gzQ6fDsdfP7dr/6hiAVAxLJk0TsftPOfz984Zpa3oSb/+k7ae7VyfriKWABELHwRvZ305ezu2X1X52d77clakVgi8EERruOjty4PVxELgIiF7Pg9O5vbnfv8zpngnQ9lim791V9/uPbxP763EgEbywauTcQCIGKh9gA+G7Vnf33eYQvdFv6jTmaPj2YfD744lGDUO866sogFYIncNgS04m9b0835JyWHcDhvre9Fp4910vVnh8/7uSNKP5v7PE7QmlR8AMHYv0UAiFhYnhAWdwDQQm8YAmiBUS93Z4gDgwiAiAXqlrvLwyeGEAARC9TNTCwAiFhondyZWBELgIgFavcgK2D7+0eGEAARC9QtZybWLCwAIhao2ah33l621/GRQQRAxAJ162a+fs8QAiBigbpZDwsAIhZaZHrIwXrOFQwiACIWqNt65ustJQBAxAK162e8dpz6+xNDCICIBeoz6nVS3k1dlhIAIGKB2r2f8dqj1N8fGkIARCxQn+kNXYOMKzw1iACIWKBuj1LeAQdDQwjAMrtlCKBhprOwLzMidpj6+5sGEoBlZiYWmid3FnbbEAKw7MzEQpOYhQWAKzETC82ykxGwcbysWVgAbgQzsdAUo163eP4w4wrbqb+/ZSABuAnMxEJz7GS8dlI8dg0hADeFmVhoglFvq3h+knGFjdTf3zOQAIhYoK6AXSuef59xhb0iYDcMJAA3ieUEsNiAjZu4nmVcIW7mshsBACIWqFWsg13LeP1m6u8fGUYAbhrLCWBRRr1BypuFtScsACIWqDVgc9fBHhSPh2ZhARCxQF0B25kFbM6hBhGwBwYTABEL1BGwEa5xoEHOOljbaQFw47mxC+qVG7DbAhYAzMRCfUa9uIlrkHEFN3IBgIiFVgXsQRGw9w0kAExZTgBtCNi4kQsA+IKZWGhDwNpKCwBELNQQr7ELwU5mwE6Kx30BCwAiFuoK2NxdCCJgN+wFCwAiFuoI2E7x/DwzYC0hAAARC7UFbIRrzMCuZFxFwAKAiIXaAnaQpmtgBSwAiFhoRcBGvD7KvMqweDwWsAAgYqHqeO2k/PWvYbeI18cGFABELFQdsOvFc+wBu5J5pc0iYIcGFABELFQZrxGtT1L+8oFYNvDQFloAIGKh6oDtpunsayfzSm7gAgARC5XHa1mzr8H6VwAQsVB5wHZTObOvMesa61/3DCoAiFioKl4jWmPrrPUSrjaeBezEwAKAiIWqAnareH4/5e88EGLv112DCgAiFqqK15h1jdnXTglXi5u3Nu0+AAAiFqqK126a3rjVLeFqsfb1aRGvWwYWAEQsVBGvnVTeutcwTta+AoCIhQrjNWZeByVdMWZfHzt5CwBELFQRr3GjVuz1WtZNWyFu2tp2cAEAiFhoQ7yOk6UDACBioSXxOpnF69gAA4CIhabHq3WvACBioVXx+jTF2lfrXgFAxIJ4BQBELDcxXjtpuk2WeAUAEQutiNcy93kVrwAgYqFV8TpJ031ehwYYAEQslBmv3eK5X3K8jlPMvPb39wwwAIhYKDteY+a1W+JVh7N4PTDAACBiocx4XU/Tm7XKitdJmq53HVrvCgAiFsqO10Gazrx2SrriMK7qdC0AELHQ9HidJLOuACBioaJwPT2goF9CvEas7iVrXQFAxELF8VrGAQXD4vGBHQYAQMRC0+N17yRc46PlAgAgYqGieO3MwnWQEa+xRGCUrHMFAEQsNcRrzulak/TlOteJAQUARCxNjtdhss4VABCxtCBeLRcAAEQstcbryixeH13zlbbFAgBELAuJ12+y28CkeGwnuwsAACKWFsTrMDkCFgAQsSwgYAfpesfDxkzr6RGwEwMIAIhY6ozXbvH87BrxGsG6XYTr0OABACKWuuO1M4vX7hVfMZ7F69jgAQAilrrj9XTd65MrvmKY7DIAAIhYFhiw68XzTrra0oGI123rXQEAEcui4jVmX2PpwLp4BQBELG0I2PVZwL5uyyzxCgCIWBYer1edfR0Xj03xCgCIWBYdsGvF8/N0+drXuFHrsd0GAAARSxMCNnYe2LnkK+KQglg2sGuwAAARSxMCNpYPDC75imGazr4eGSwAQMSy6HiN9a+xfKB7wVdM0nTd69hgAQAilqYE7IfFY+2Cr4hlA9tmXwEAEUsbAjaidcPsKwDQNm8YgqV3UcBGuK4KWACgjczELrOLb+IaFvG6aYAAABFL0wI24vXZOX8SN28NDRAAIGJpWsDGOtiX6evHyApYAGApWBO7nHYELACwzMzELptRr5Oms7DzYvusLYMDACwLM7HLZ/3Mr/cELAAgYmm69+Y+j31g7UIAAIhYGq8z9/lTp3ABACKWtkXsruEAAEQsbTCZfRybhQUARCxtcTD7+JGhAABELG3xgSEAAKB9Rr2XxeO5gQAAlpWZ2OW0kWK/2OnxswAA0BKj3qB4PDMQAAC0LWTXTmIWAGDJ/F+AAQDQm5cEN+2SCgAAAABJRU5ErkJggg==" alt="Logo ISBS">
+    <div class="eyebrow">INSTITUT SUPÉRIEUR DE BIOTECHNOLOGIE DE SFAX</div>
+    <h1 class="title-xl">🎓 Mission : Réussir ses études à l'université</h1>
+    <p class="subtitle" style="margin:0 auto;">
+      Tu viens d'entrer à l'université. De nouveaux lieux, de nouvelles règles, de nouveaux outils
+      et une nouvelle manière d'apprendre t'attendent. Ta mission : devenir progressivement autonome
+      et réussir ton premier semestre.
+    </p>
+    <input type="text" id="team-name-input" class="team-input" placeholder="Nom de votre équipe" maxlength="30">
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn btn-primary" onclick="startGame()">Commencer la mission →</button>
+    </div>
+    <p class="credit-line">Jeu interactif réalisé par Besma MARDASSI dans le cadre de la Journée d'intégration_ISBS_2026 ; suite à maintes itérations avec ChatGPT et Claude.ia.<br>Mis à disposition selon les termes de la licence Creative Commons Attribution – Pas d'Utilisation Commerciale – Pas de Modification 4.0 International.</p>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section class="screen" id="screen-dashboard">
+    <div class="eyebrow">TABLEAU DE MISSION</div>
+    <h2 class="title-lg">Réussir ses études à l'université</h2>
+    <p class="subtitle">Choisissez la prochaine mission à accomplir. Les cinq clés débloquent la mission finale.</p>
+    <div class="path" id="path-container"></div>
+  </section>
+
+  <!-- MISSION 1 -->
+  <section class="screen" id="screen-m1">
+    <div class="eyebrow">MISSION 1 · AA1</div>
+    <h2 class="title-lg">🧭 Où suis-je ?</h2>
+    <p class="subtitle">Découvrir l'environnement universitaire et savoir vers qui se tourner.</p>
+    <div id="m1-content"></div>
+  </section>
+
+  <!-- MISSION 2 -->
+  <section class="screen" id="screen-m2">
+    <div class="eyebrow">MISSION 2 · AA1</div>
+    <h2 class="title-lg">📜 Les règles du jeu</h2>
+    <p class="subtitle">Fonctionnement, évaluation et attentes de l'université.</p>
+    <div id="m2-content"></div>
+  </section>
+
+  <!-- MISSION 3 -->
+  <section class="screen" id="screen-m3">
+    <div class="eyebrow">MISSION 3 · AA2</div>
+    <h2 class="title-lg">💻 Digital Survival</h2>
+    <p class="subtitle">Outils et plateformes numériques universitaires.</p>
+    <div id="m3-content"></div>
+  </section>
+
+  <!-- MISSION 4 -->
+  <section class="screen" id="screen-m4">
+    <div class="eyebrow">MISSION 4 · AA3</div>
+    <h2 class="title-lg">⏱️ Panique à l'université !</h2>
+    <p class="subtitle">Organiser son travail et prioriser avec la matrice d'Eisenhower.</p>
+    <div id="m4-content"></div>
+  </section>
+
+  <!-- MISSION 5 -->
+  <section class="screen" id="screen-m5">
+    <div class="eyebrow">MISSION 5 · AA4</div>
+    <h2 class="title-lg">🔎 Détectives de l'information</h2>
+    <p class="subtitle">Rechercher, évaluer et citer correctement l'information.</p>
+    <div id="m5-content"></div>
+  </section>
+
+  <!-- MISSION FINALE -->
+  <section class="screen" id="screen-final-mission">
+    <div class="eyebrow">MISSION FINALE · AA5</div>
+    <h2 class="title-lg">🎯 Mon plan de réussite</h2>
+    <p class="subtitle">À vous de construire votre propre plan — il n'y a pas de bonne ou mauvaise réponse ici.</p>
+    <div id="final-mission-content"></div>
+  </section>
+
+  <!-- OBSTACLES -->
+  <section class="screen" id="screen-obstacles">
+    <div class="eyebrow">AVANT DE PARTIR</div>
+    <h2 class="title-lg">Anticiper les obstacles</h2>
+    <div id="obstacles-content"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goScreen('screen-final-screen'); renderFinalScreen();">Continuer →</button>
+    </div>
+  </section>
+
+  <!-- FINAL SCREEN -->
+  <section class="screen" id="screen-final-screen">
+    <div id="final-screen-content"></div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="screen" id="screen-challenge">
+    <div id="challenge-content"></div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="screen" id="screen-closing">
+    <div id="closing-content"></div>
+  </section>
+
+</div>
+
+<script>
+/* =========================================================
+   CONFIGURATION — à adapter facilement par l'enseignant
+========================================================= */
+const CONFIG = {
+  etablissementComplet: "Institut Supérieur de Biotechnologie de Sfax (ISBS)",
+  sigle: "ISBS",
+  lms: "Moodle",
+  entPlaceholder: "[ENT]",
+  entUrl: "https://us.uvt.tn/",
+  terrainCodeM1: "0000",   // code de la mission terrain n°1 (lieux/services) — à changer le jour J si vous le souhaitez
+  terrainCodeM3: "0000",   // code de la mission terrain n°3 (Moodle) — à changer le jour J si vous le souhaitez
+  challengeDurationDays: 14  // durée par défaut du défi final, à ajuster selon la période réellement allouée (ex : 1-2 semaines)
+};
+
+/* =========================================================
+   STATE
+========================================================= */
+const state = {
+  teamName: "",
+  xp: 0,
+  keys: [false,false,false,false,false],
+  unlocked: [true,false,false,false,false,false],
+  completed: [false,false,false,false,false,false],
+};
+
+function saveNothingReminder(){ /* état conservé en mémoire pour la session, volontairement non persistant */ }
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+function goScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function startGame(){
+  const v = document.getElementById('team-name-input').value.trim();
+  state.teamName = v || "Équipe sans nom";
+  document.getElementById('topbar').classList.add('show');
+  updateTopbar();
+  renderDashboard();
+  goScreen('screen-dashboard');
+}
+
+function updateTopbar(){
+  document.getElementById('tb-team').textContent = state.teamName;
+  document.getElementById('tb-xp').textContent = state.xp;
+  const keysDone = state.keys.filter(Boolean).length;
+  document.getElementById('tb-progress-text').textContent = keysDone + "/5";
+  document.getElementById('tb-progress').style.width = (keysDone/5*100) + "%";
+  const kr = document.getElementById('tb-keys');
+  kr.innerHTML = state.keys.map(k=>`<span class="key-icon ${k?'on':''}">🔑</span>`).join('');
+}
+
+const MISSIONS_META = [
+  {emoji:"🧭", title:"Où suis-je ?", sub:"Environnement universitaire · AA1", screen:"screen-m1"},
+  {emoji:"📜", title:"Les règles du jeu", sub:"Fonctionnement & attentes · AA1", screen:"screen-m2"},
+  {emoji:"💻", title:"Digital Survival", sub:"Outils numériques · AA2", screen:"screen-m3"},
+  {emoji:"⏱️", title:"Panique à l'université !", sub:"Organisation & priorisation · AA3", screen:"screen-m4"},
+  {emoji:"🔎", title:"Détectives de l'information", sub:"Recherche & fiabilité · AA4", screen:"screen-m5"},
+  {emoji:"🎯", title:"Mon plan de réussite", sub:"Objectif personnel · AA5", screen:"screen-final-mission"},
+];
+
+function renderDashboard(){
+  const container = document.getElementById('path-container');
+  container.innerHTML = "";
+  MISSIONS_META.forEach((m,i)=>{
+    const isUnlocked = state.unlocked[i];
+    const isDone = state.completed[i];
+    const isCurrent = isUnlocked && !isDone;
+    const node = document.createElement('div');
+    node.className = 'node ' + (isDone?'done':(isUnlocked?'unlocked':'locked')) + (isCurrent?' current':'');
+    node.innerHTML = `
+      <div class="node-marker">${i<5? (i+1) : '🎯'}</div>
+      <div class="node-card" ${isUnlocked?`onclick="openMission(${i})"`:''}>
+        <div class="node-emoji">${m.emoji}</div>
+        <div class="node-text">
+          <div class="node-title">${m.title}</div>
+          <div class="node-sub">${m.sub}</div>
+        </div>
+        <div class="node-status">${isDone? '✅' : (isUnlocked? '' : '🔒')}</div>
+      </div>`;
+    container.appendChild(node);
+  });
+}
+
+function openMission(i){
+  if(!state.unlocked[i]) return;
+  const screen = MISSIONS_META[i].screen;
+  goScreen(screen);
+  if(i===0 && !window._m1init){ initMission1(); window._m1init=true; }
+  if(i===1 && !window._m2init){ initMission2(); window._m2init=true; }
+  if(i===2 && !window._m3init){ initMission3(); window._m3init=true; }
+  if(i===3 && !window._m4init){ initMission4(); window._m4init=true; }
+  if(i===4 && !window._m5init){ initMission5(); window._m5init=true; }
+  if(i===5 && !window._m6init){ initFinalMission(); window._m6init=true; }
+}
+
+function completeMission(i, xpGain){
+  if(state.completed[i]) return;
+  state.completed[i] = true;
+  if(i<5){ state.keys[i] = true; state.unlocked[i+1] = true; }
+  state.xp += xpGain;
+  updateTopbar();
+  if(i===5){
+    goScreen('screen-obstacles');
+    renderObstacles();
+  } else {
+    renderDashboard();
+    goScreen('screen-dashboard');
+  }
+}
+
+/* =========================================================
+   MISSION 1 — OÙ SUIS-JE ?
+========================================================= */
+const M1_SITUATIONS = [
+  {
+    q: "Je rencontre un problème concernant mon inscription administrative. Vers qui dois-je me tourner ?",
+    options: ["Un camarade de promotion","La scolarité","La bibliothèque","Le Centre 4C"],
+    correct: 1,
+    feedback: "La scolarité gère les dossiers d'inscription et le suivi administratif de votre parcours. C'est le premier interlocuteur pour toute question liée à votre statut d'étudiant."
+  },
+  {
+    q: "Je cherche un ouvrage de référence ou un espace calme pour réviser entre deux cours.",
+    options: ["Le bureau d'ordre","La bibliothèque","L'infirmerie","Vie étudiante, clubs & événements"],
+    correct: 1,
+    feedback: "La bibliothèque met à disposition les ressources documentaires et des espaces de travail. C'est un lieu clé pour vos révisions et vos recherches."
+  },
+  {
+    q: "Je dois déposer un document officiel (certificat, demande écrite) qui doit être enregistré et transmis au bon service.",
+    options: ["Le bureau d'ordre","Le Centre 4C","La bibliothèque","Un responsable pédagogique"],
+    correct: 0,
+    feedback: "Le bureau d'ordre enregistre le courrier et les documents officiels puis les transmet au service concerné. C'est le point d'entrée de toute démarche écrite formelle."
+  },
+  {
+    q: "Je souhaite développer mes compétences, les faire certifier et améliorer mon CV. Que puis-je faire ?",
+    options: ["L'infirmerie","Vie étudiante, clubs & événements","Le Centre 4C","La Direction des Stages"],
+    correct: 2,
+    feedback: "Le Centre 4C accompagne le développement et la certification des compétences, ainsi que l'insertion professionnelle — notamment pour préparer et améliorer son CV."
+  },
+  {
+    q: "Je cherche un stage. Vers qui dois-je me tourner ?",
+    options: ["La bibliothèque","La Direction des Stages","L'infirmerie","Vie étudiante, clubs & événements"],
+    correct: 1,
+    feedback: "La Direction des Stages accompagne les étudiants dans les démarches liées à la recherche et à la réalisation de leur stage."
+  },
+  {
+    q: "J'ai un souci de santé ponctuel (malaise, petit soin, besoin d'un conseil médical rapide).",
+    options: ["Le bureau d'ordre","L'infirmerie","La bibliothèque","Le Centre 4C"],
+    correct: 1,
+    feedback: "L'infirmerie prend en charge les besoins de santé ponctuels sur le campus. Pour un soutien plus social ou moral, la rubrique « Vie étudiante » est aussi une ressource à connaître — vous allez la découvrir juste après."
+  }
+];
+
+const CAMPUS_VIE_ETUDIANTE = [
+  {
+    icon: "🎭",
+    title: "Clubs étudiants",
+    desc: "Plusieurs clubs sont déjà actifs à l'ISBS : le club ambassadeur SOSVE TN (engagement humanitaire), le club IDER, et le club Santé et Secourisme. Et ce n'est qu'un début : d'autres clubs peuvent naître à l'initiative d'étudiants motivés et porteurs de projets — pourquoi pas le vôtre ?"
+  },
+  {
+    icon: "🎉",
+    title: "Événements socio-culturels",
+    desc: "Des temps forts rythment l'année : journée d'intégration, journées portes ouvertes, journée citoyenne, journée « Industrie cosmétique et parapharmaceutique »… Les annonces et affichages de l'établissement en donnent le calendrier."
+  },
+  {
+    icon: "⚽",
+    title: "Activités culturelles & sportives",
+    desc: "Ateliers, tournois ou pratiques artistiques et sportives proposés aux étudiants (ex : [tournoi sportif], [atelier artistique]…). Une bonne façon de souffler entre deux périodes de révisions."
+  },
+  {
+    icon: "🚀",
+    title: "Se former à l'entrepreneuriat",
+    desc: "Envie d'apprendre à monter un projet ou une future entreprise ? Le Pôle Étudiant Entrepreneur de Sfax et le Centre EDMEJ Sfax proposent des formations et un accompagnement dédiés aux étudiants porteurs d'idées."
+  }
+];
+
+const M1_MATCH = [
+  {situation:"Cours en amphithéâtre, l'enseignant expose le contenu devant un grand groupe.", correct:"CM"},
+  {situation:"Petit groupe, exercices d'application et discussion avec l'enseignant.", correct:"TD"},
+  {situation:"Séance en laboratoire ou en salle informatique, manipulation pratique.", correct:"TP"},
+  {situation:"Une partie du travail se fait en ligne sur Moodle, l'autre en présentiel.", correct:"Hybride"},
+];
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function shuffleSituation(s){
+  const correctText = s.options[s.correct];
+  const shuffledOptions = shuffleArray(s.options);
+  return {
+    q: s.q,
+    options: shuffledOptions,
+    correct: shuffledOptions.indexOf(correctText),
+    feedback: s.feedback
+  };
+}
+
+let m1State = {step:0, correctCount:0, terrainDone:false, vieDone:false, matchAnswers:{}, shuffled:[]};
+
+function initMission1(){
+  m1State = {
+    step:0, correctCount:0, terrainDone:false, vieDone:false, matchAnswers:{},
+    shuffled: M1_SITUATIONS.map(shuffleSituation)
+  };
+  m1VieRevealed = new Set();
+  m1MatchAttempts = 0;
+  M1_MATCH.forEach(m=>{ delete m._picked; });
+  renderM1Situation();
+}
+
+function renderM1Situation(){
+  const el = document.getElementById('m1-content');
+  if(m1State.step < M1_SITUATIONS.length){
+    const s = m1State.shuffled[m1State.step];
+    el.innerHTML = `
+      <div class="q-block">
+        <div class="q-count">Situation ${m1State.step+1} / ${M1_SITUATIONS.length}</div>
+        <p class="q-text">${s.q}</p>
+        <div class="options" id="m1-options"></div>
+        <div class="feedback" id="m1-feedback"></div>
+        <div class="btn-row" id="m1-nav" style="display:none;">
+          <button class="btn btn-primary" onclick="m1Next()">Continuer →</button>
+        </div>
+      </div>`;
+    const opts = document.getElementById('m1-options');
+    s.options.forEach((o,idx)=>{
+      const div = document.createElement('div');
+      div.className='option';
+      div.innerHTML = `<span class="option-letter">${String.fromCharCode(65+idx)}.</span><span>${o}</span>`;
+      div.onclick = ()=>m1Answer(idx);
+      opts.appendChild(div);
+    });
+  } else if(!m1State.vieDone){
+    renderM1Vie();
+  } else {
+    renderM1Terrain();
+  }
+}
+
+function m1Answer(idx){
+  const s = m1State.shuffled[m1State.step];
+  const opts = document.querySelectorAll('#m1-options .option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  opts[idx].classList.add(idx===s.correct?'correct':'incorrect');
+  if(idx!==s.correct) opts[s.correct].classList.add('correct');
+  const fb = document.getElementById('m1-feedback');
+  fb.className = 'feedback show ' + (idx===s.correct?'good':'bad');
+  fb.innerHTML = `<strong>${idx===s.correct?'Exact.':'Pas tout à fait.'}</strong>${s.feedback}`;
+  if(idx===s.correct) m1State.correctCount++;
+  document.getElementById('m1-nav').style.display='flex';
+}
+
+function m1Next(){
+  m1State.step++;
+  renderM1Situation();
+}
+
+function renderM1Vie(){
+  const el = document.getElementById('m1-content');
+  el.innerHTML = `
+    <p class="pill">Vie étudiante, clubs & événements</p>
+    <p class="q-text">Explorez la carte du campus : cliquez sur chaque case pour découvrir ce que recouvre la vie étudiante en dehors des cours.</p>
+    <div class="campus-map" id="campus-map"></div>
+    <p class="helper" id="campus-helper">0 / ${CAMPUS_VIE_ETUDIANTE.length} case(s) explorée(s)</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="m1-vie-continue" disabled onclick="m1VieDone()">Continuer →</button>
+    </div>`;
+  const map = document.getElementById('campus-map');
+  CAMPUS_VIE_ETUDIANTE.forEach((tile,i)=>{
+    const div = document.createElement('div');
+    div.className='campus-tile';
+    div.id='campus-tile-'+i;
+    div.innerHTML = `
+      <div class="campus-tile-head"><span class="campus-tile-icon">${tile.icon}</span><span class="campus-tile-title">${tile.title}</span></div>
+      <div class="campus-tile-desc">${tile.desc}</div>`;
+    div.onclick = ()=>m1VieToggle(i);
+    map.appendChild(div);
+  });
+}
+
+let m1VieRevealed = new Set();
+function m1VieToggle(i){
+  const tile = document.getElementById('campus-tile-'+i);
+  tile.classList.add('revealed');
+  m1VieRevealed.add(i);
+  document.getElementById('campus-helper').textContent = `${m1VieRevealed.size} / ${CAMPUS_VIE_ETUDIANTE.length} case(s) explorée(s)`;
+  if(m1VieRevealed.size === CAMPUS_VIE_ETUDIANTE.length){
+    document.getElementById('m1-vie-continue').disabled = false;
+  }
+}
+
+function m1VieDone(){
+  m1State.vieDone = true;
+  renderM1Situation();
+}
+
+function renderM1Terrain(){
+  const el = document.getElementById('m1-content');
+  el.innerHTML = `
+    <div class="terrain-box">
+      <h3 style="margin-top:0;">🧭 MISSION TERRAIN</h3>
+      <p>Quittez momentanément le jeu. Avec votre équipe, retrouvez dans l'établissement (${CONFIG.sigle})
+      les lieux ou services indiqués par votre enseignant.</p>
+      <p>Lorsque vous avez terminé, saisissez le code communiqué par l'enseignant pour poursuivre.</p>
+      <input type="text" class="code-input" id="m1-terrain-code" placeholder="CODE">
+      <button class="btn btn-primary" onclick="checkM1Terrain()">Valider le code</button>
+      <div class="code-msg" id="m1-terrain-msg"></div>
+      <button class="btn btn-ghost skip-link" onclick="renderM1Match()">Pas de code pour l'instant ? Continuer sans code →</button>
+    </div>`;
+}
+
+function checkM1Terrain(){
+  const val = document.getElementById('m1-terrain-code').value.trim().toUpperCase();
+  const msg = document.getElementById('m1-terrain-msg');
+  if(val === CONFIG.terrainCodeM1.toUpperCase()){
+    msg.className='code-msg ok'; msg.textContent='Code validé. Retour au jeu !';
+    m1State.terrainDone = true;
+    setTimeout(renderM1Match, 700);
+  } else {
+    msg.className='code-msg err'; msg.textContent="Code incorrect. Vérifiez avec votre enseignant, ou utilisez le lien ci-dessous si aucun code n'a été communiqué.";
+  }
+}
+
+function renderM1Match(){
+  const el = document.getElementById('m1-content');
+  let rows = "";
+  M1_MATCH.forEach((m,i)=>{
+    rows += `
+      <div class="match-row">
+        <div class="match-situation">${m.situation}</div>
+        <div class="match-choices" id="m1-match-${i}">
+          ${["CM","TD","TP","Hybride"].map(c=>`<button class="match-btn" onclick="m1MatchPick(${i},'${c}')">${c}</button>`).join('')}
+        </div>
+      </div>`;
+  });
+  el.innerHTML = `
+    <p class="pill">Modalités pédagogiques</p>
+    <p class="q-text">Associez chaque situation à la modalité pédagogique correspondante.</p>
+    ${rows}
+    <div class="feedback" id="m1-match-feedback"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="m1-match-validate" onclick="m1MatchValidate()">Valider mes réponses</button>
+    </div>`;
+}
+
+function m1MatchPick(i, choice){
+  M1_MATCH[i]._picked = choice;
+  const wrap = document.getElementById('m1-match-'+i);
+  wrap.querySelectorAll('.match-btn').forEach(b=>{
+    b.classList.remove('correct','incorrect');
+    b.classList.toggle('selected', b.textContent===choice);
+  });
+}
+
+let m1MatchAttempts = 0;
+function m1MatchValidate(){
+  let allCorrect = true;
+  M1_MATCH.forEach((m,i)=>{
+    const wrap = document.getElementById('m1-match-'+i);
+    wrap.querySelectorAll('.match-btn').forEach(b=>{
+      b.classList.remove('correct','incorrect');
+      if(b.textContent===m.correct) b.classList.add('correct');
+      else if(b.textContent===m._picked) b.classList.add('incorrect');
+    });
+    if(m._picked !== m.correct) allCorrect = false;
+  });
+  m1MatchAttempts++;
+  const fb = document.getElementById('m1-match-feedback');
+  fb.className = 'feedback show ' + (allCorrect?'good':'bad');
+  fb.innerHTML = allCorrect
+    ? `<strong>Bravo.</strong> Vous distinguez bien les modalités pédagogiques : cela vous aide à adapter votre comportement et votre préparation selon le format du cours.`
+    : `<strong>Presque.</strong> Relisez les cas en rouge : le CM transmet un contenu en grand groupe, le TD fait pratiquer en petit groupe, le TP est manipulatoire, l'hybride combine présentiel et distanciel.`;
+  if(allCorrect){
+    setTimeout(()=>{
+      document.getElementById('m1-content').innerHTML = keyRewardHTML(1);
+      completeMission(0, 100);
+    }, 1200);
+  } else if(m1MatchAttempts >= 3){
+    fb.innerHTML += `
+      <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--line);">
+        <strong>Voici les bonnes réponses :</strong>
+        <ul style="margin:8px 0 12px; padding-left:18px; font-size:14px; line-height:1.6;">
+          ${M1_MATCH.map(m=>`<li>${m.situation} → <b>${m.correct}</b></li>`).join('')}
+        </ul>
+        <button class="btn btn-primary" onclick="m1MatchForceContinue()">Continuer →</button>
+      </div>`;
+  }
+}
+
+function m1MatchForceContinue(){
+  document.getElementById('m1-content').innerHTML = keyRewardHTML(1);
+  completeMission(0, 100);
+}
+
+function keyRewardHTML(n){
+  return `<div class="key-reward"><div class="k">🔑</div><h3>Clé ${n} obtenue !</h3><p class="subtitle" style="margin:0 auto;">Retour au tableau de mission…</p></div>`;
+}
+
+/* =========================================================
+   MISSION 2 — LES RÈGLES DU JEU (Vrai / Faux / À vérifier)
+========================================================= */
+const M2_ITEMS = [
+  {
+    q: "« Un camarade m'a dit que je pouvais manquer cette séance sans conséquence. »",
+    correct: "À vérifier",
+    feedback: "À l'université, il est important de vérifier une information auprès d'une source officielle (enseignant, règlement des études, LMS) avant d'agir, plutôt que de se fier à une rumeur entre étudiants."
+  },
+  {
+    q: "Ma moyenne finale du module sera calculée uniquement à partir du contrôle continu.",
+    correct: "Faux",
+    feedback: "D'après la fiche du module, la moyenne finale combine un test écrit à mi-parcours (30%) et un projet semestriel avec activités individuelles et collaboratives (70%)."
+  },
+  {
+    q: "Je dois obtenir une moyenne finale d'au moins 10/20 pour valider ce module.",
+    correct: "Vrai",
+    feedback: "La validation du module nécessite une moyenne finale supérieure ou égale à 10/20."
+  },
+  {
+    q: "« Un module de ma maquette pédagogique vaut 4 crédits. Cela correspond donc à environ 30 heures d'enseignement (CM + TD + TP confondus). »",
+    correct: "Faux",
+    feedback: "En moyenne, 1 crédit correspond à 10 à 15 heures de volume horaire. 4 crédits représentent donc plutôt 40 à 60 heures, et non 30. Repère utile : un semestre de 30 crédits correspond globalement à 300 à 400 heures d'enseignement, réparties entre plusieurs modules — chacun étant généralement organisé en 2 unités d'enseignement (exceptionnellement 3)."
+  },
+  {
+    q: "Si je ne comprends pas une consigne, la seule solution est d'attendre la séance suivante sans rien faire d'ici là.",
+    correct: "Faux",
+    feedback: "Vous pouvez mobiliser d'autres ressources dès maintenant : consulter Moodle, contacter l'enseignant, échanger avec des camarades ou solliciter un tuteur."
+  }
+];
+
+let m2Step = 0;
+function initMission2(){ m2Step = 0; renderM2(); }
+
+function renderM2(){
+  const el = document.getElementById('m2-content');
+  if(m2Step >= M2_ITEMS.length){
+    el.innerHTML = keyRewardHTML(2);
+    completeMission(1, 100);
+    return;
+  }
+  const item = M2_ITEMS[m2Step];
+  el.innerHTML = `
+    <div class="q-block">
+      <div class="q-count">Affirmation ${m2Step+1} / ${M2_ITEMS.length}</div>
+      <p class="q-text">${item.q}</p>
+      <div class="options" id="m2-options">
+        ${["Vrai","Faux","À vérifier"].map((o,i)=>`<div class="option" onclick="m2Answer('${o}')"><span class="option-letter">${String.fromCharCode(65+i)}.</span><span>${o}</span></div>`).join('')}
+      </div>
+      <div class="feedback" id="m2-feedback"></div>
+      <div class="btn-row" id="m2-nav" style="display:none;">
+        <button class="btn btn-primary" onclick="m2Step++; renderM2();">Continuer →</button>
+      </div>
+    </div>`;
+}
+
+function m2Answer(choice){
+  const item = M2_ITEMS[m2Step];
+  const opts = document.querySelectorAll('#m2-options .option');
+  opts.forEach(o=>{
+    o.classList.add('disabled');
+    if(o.textContent.trim()===choice) o.classList.add(choice===item.correct?'correct':'incorrect');
+    if(o.textContent.trim()===item.correct) o.classList.add('correct');
+  });
+  const fb = document.getElementById('m2-feedback');
+  fb.className = 'feedback show ' + (choice===item.correct?'good':'bad');
+  fb.innerHTML = `<strong>${choice===item.correct?'Exact.':'La bonne réponse est : '+item.correct+'.'}</strong>${item.feedback}`;
+  document.getElementById('m2-nav').style.display='flex';
+}
+
+/* =========================================================
+   MISSION 3 — DIGITAL SURVIVAL
+========================================================= */
+const M3_MESSAGES = [
+  {
+    label: "Message A",
+    text: "\"Slt g raté mon cours 2m1, y'a moyen de rattraper ?\"",
+    correct: false,
+    feedback: "Trop familier, aucune contextualisation (quel cours, quel groupe, quelle date) et aucune formule de politesse."
+  },
+  {
+    label: "Message B",
+    text: "\"Bonjour Madame/Monsieur [Nom], je suis étudiant(e) en [groupe/filière]. Je vous contacte au sujet de l'absence du [date] au cours de [matière] : serait-il possible de connaître les modalités de rattrapage ? Je vous remercie par avance. Cordialement, [Nom, groupe]\"",
+    correct: true,
+    feedback: "Ce message est clair, contextualisé (matière, date, groupe), poli et précis dans sa demande — c'est le format à privilégier."
+  },
+  {
+    label: "Message C",
+    text: "\"Bonjour, j'espère que vous allez bien, en fait cette semaine j'ai eu beaucoup de choses à gérer et du coup...\"",
+    correct: false,
+    feedback: "Le message est long mais sans objet clair ni demande précise formulée : l'enseignant ne sait pas ce qui est attendu."
+  },
+  {
+    label: "Message D",
+    text: "\"c'est possible de reporter le devoir ?\"",
+    correct: false,
+    feedback: "Aucune salutation, aucune signature, aucun contexte (quel devoir, quel cours) : le message manque de politesse et de précision."
+  }
+];
+
+function initMission3(){
+  const el = document.getElementById('m3-content');
+  el.innerHTML = `
+    <p class="pill">Environnement numérique</p>
+    <p class="q-text">Votre scolarité repose en partie sur des outils numériques : <a href="${CONFIG.entUrl}" target="_blank" rel="noopener" style="color:var(--gold);">${CONFIG.entPlaceholder}</a> pour vos démarches administratives et <b>${CONFIG.lms}</b> pour vos cours et ressources pédagogiques.</p>
+    <div class="terrain-box">
+      <h3 style="margin-top:0;">Mission pratique</h3>
+      <p>Sur votre propre poste ou téléphone, ouvrez ${CONFIG.lms} et retrouvez l'information demandée par votre enseignant (ex : un document déposé, un intitulé de cours, une date de rendu).</p>
+      <input type="text" class="code-input" id="m3-terrain-code" placeholder="CODE">
+      <button class="btn btn-primary" onclick="checkM3Terrain()">Valider le code</button>
+      <div class="code-msg" id="m3-terrain-msg"></div>
+      <button class="btn btn-ghost skip-link" onclick="renderM3Comm()">Pas de code pour l'instant ? Continuer sans code →</button>
+    </div>
+    <div id="m3-comm" style="display:none;"></div>`;
+}
+
+function checkM3Terrain(){
+  const val = document.getElementById('m3-terrain-code').value.trim().toUpperCase();
+  const msg = document.getElementById('m3-terrain-msg');
+  if(val === CONFIG.terrainCodeM3.toUpperCase()){
+    msg.className='code-msg ok'; msg.textContent='Code validé !';
+    setTimeout(renderM3Comm, 600);
+  } else {
+    msg.className='code-msg err'; msg.textContent="Code incorrect. Vérifiez avec votre enseignant, ou utilisez le lien ci-dessous si aucun code n'a été communiqué.";
+  }
+}
+
+function renderM3Comm(){
+  const box = document.getElementById('m3-comm');
+  box.style.display='block';
+  box.innerHTML = `
+    <p class="pill">Communication universitaire</p>
+    <p class="q-text">Quel message est le plus approprié à envoyer à un enseignant ?</p>
+    <div class="options" id="m3-options">
+      ${M3_MESSAGES.map((m,i)=>`<div class="option" onclick="m3Answer(${i})"><span class="option-letter">${String.fromCharCode(65+i)}.</span><span>${m.text}</span></div>`).join('')}
+    </div>
+    <div class="feedback" id="m3-feedback"></div>
+    <div class="btn-row" id="m3-nav" style="display:none;"><button class="btn btn-primary" onclick="document.getElementById('m3-content').innerHTML=keyRewardHTML(3); completeMission(2,100);">Continuer →</button></div>`;
+}
+
+function m3Answer(i){
+  const opts = document.querySelectorAll('#m3-options .option');
+  opts.forEach((o,idx)=>{
+    o.classList.add('disabled');
+    if(idx===i) o.classList.add(M3_MESSAGES[i].correct?'correct':'incorrect');
+    if(M3_MESSAGES[idx].correct) o.classList.add('correct');
+  });
+  const fb = document.getElementById('m3-feedback');
+  fb.className='feedback show ' + (M3_MESSAGES[i].correct?'good':'bad');
+  fb.innerHTML = `<strong>${M3_MESSAGES[i].correct?"Exact.":"Ce n'est pas le message le plus adapté."}</strong>${M3_MESSAGES[i].feedback} Un bon message est clair, contextualisé, poli et précis.`;
+  document.getElementById('m3-nav').style.display='flex';
+}
+
+/* =========================================================
+   MISSION 4 — PANIQUE À L'UNIVERSITÉ (Eisenhower + planning)
+========================================================= */
+const M4_TASKS = [
+  {id:'t1', text:"Contrôle continu demain matin", zone:'iu'},
+  {id:'t2', text:"Devoir à rendre dans 2 jours", zone:'iu'},
+  {id:'t3', text:"Préparer une présentation orale pour la semaine prochaine", zone:'iu'},
+  {id:'t4', text:"Projet de fin de semestre (échéance dans 2 mois)", zone:'inu'},
+  {id:'t5', text:"Réviser régulièrement le cours de la semaine", zone:'inu'},
+  {id:'t6', text:"Répondre aujourd'hui à un mail administratif sans réel impact sur votre réussite", zone:'niu'},
+  {id:'t7', text:"Scroller les réseaux sociaux entre deux cours", zone:'ninu'},
+];
+const ZONE_LABELS = {iu:"Important + Urgent", inu:"Important + Non urgent", niu:"Non important + Urgent", ninu:"Non important + Non urgent"};
+
+let m4Attempts = 0;
+
+function initMission4(){
+  m4Attempts = 0;
+  const el = document.getElementById('m4-content');
+  el.innerHTML = `
+    <p class="pill">Matrice d'Eisenhower</p>
+    <p class="q-text">Faites glisser chaque tâche dans la bonne case de la matrice.</p>
+    <div class="tray" id="m4-tray"></div>
+    <div class="matrix">
+      <div class="matrix-corner"></div>
+      <div class="matrix-label">URGENT</div>
+      <div class="matrix-label">NON URGENT</div>
+      <div class="matrix-label row-label">IMPORTANT</div>
+      <div class="dropzone" data-zone="iu"></div>
+      <div class="dropzone" data-zone="inu"></div>
+      <div class="matrix-label row-label">NON IMPORTANT</div>
+      <div class="dropzone" data-zone="niu"></div>
+      <div class="dropzone" data-zone="ninu"></div>
+    </div>
+    <div class="feedback" id="m4-feedback"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="m4Validate()">Valider</button></div>
+    <div id="m4-planning-wrap" style="margin-top:40px; display:none;"></div>
+  `;
+  const tray = document.getElementById('m4-tray');
+  shuffleArray(M4_TASKS).forEach(t=>{
+    const c = document.createElement('div');
+    c.className='chip'; c.draggable=true; c.id='chip-'+t.id; c.textContent=t.text;
+    c.dataset.task = t.id;
+    c.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', t.id); c.classList.add('dragging'); });
+    c.addEventListener('dragend', ()=> c.classList.remove('dragging'));
+    tray.appendChild(c);
+  });
+  document.querySelectorAll('.dropzone').forEach(zone=>{
+    zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', ()=> zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e=>{
+      e.preventDefault(); zone.classList.remove('dragover');
+      const id = e.dataTransfer.getData('text/plain');
+      const chip = document.getElementById('chip-'+id);
+      if(chip) zone.appendChild(chip);
+    });
+  });
+  // allow dropping back into tray
+  tray.addEventListener('dragover', e=>e.preventDefault());
+  tray.addEventListener('drop', e=>{
+    e.preventDefault();
+    const id = e.dataTransfer.getData('text/plain');
+    const chip = document.getElementById('chip-'+id);
+    if(chip) tray.appendChild(chip);
+  });
+}
+
+function m4Validate(){
+  let allCorrect = true;
+  let placedCount = 0;
+  document.querySelectorAll('.dropzone').forEach(zone=>{
+    const zoneName = zone.dataset.zone;
+    zone.querySelectorAll('.chip').forEach(chip=>{
+      placedCount++;
+      const task = M4_TASKS.find(t=>t.id===chip.dataset.task);
+      chip.classList.remove('correct-mark','incorrect-mark');
+      if(task.zone===zoneName){ chip.classList.add('correct-mark'); }
+      else { chip.classList.add('incorrect-mark'); allCorrect=false; }
+    });
+  });
+  const fb = document.getElementById('m4-feedback');
+  if(placedCount < M4_TASKS.length){
+    fb.className='feedback show bad';
+    fb.innerHTML = `<strong>Il reste des tâches non classées.</strong> Placez toutes les cartes dans la matrice avant de valider.`;
+    return;
+  }
+  m4Attempts++;
+  fb.className='feedback show ' + (allCorrect?'good':'bad');
+  fb.innerHTML = allCorrect
+    ? `<strong>Bravo, la matrice est correcte.</strong> L'important + urgent se traite en priorité, l'important + non urgent se planifie à l'avance pour ne jamais devenir urgent, et le non important se délègue ou s'élimine.`
+    : `<strong>Quelques cartes sont mal placées (bordure en pointillés).</strong> Repositionnez-les : une tâche est <i>importante</i> si elle a un impact réel sur votre réussite, <i>urgente</i> si son échéance est proche.`;
+  if(allCorrect){
+    document.getElementById('m4-planning-wrap').style.display='block';
+    renderM4Planning();
+  } else if(m4Attempts >= 3){
+    fb.innerHTML += m4SolutionHTML();
+  }
+}
+
+function m4SolutionHTML(){
+  const grouped = {iu:[], inu:[], niu:[], ninu:[]};
+  M4_TASKS.forEach(t=>grouped[t.zone].push(t.text));
+  const rows = Object.keys(ZONE_LABELS).map(z=>
+    `<li><b>${ZONE_LABELS[z]}</b> — ${grouped[z].join(' · ')}</li>`
+  ).join('');
+  return `
+    <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--line);">
+      <strong>Voici la logique de priorisation :</strong>
+      <ul style="margin:8px 0 12px; padding-left:18px; font-size:14px; line-height:1.6;">${rows}</ul>
+      <p style="margin:0 0 12px; font-size:14px;">Retenez la règle : <b>important + urgent</b> se traite tout de suite ; <b>important + non urgent</b> se planifie pour ne jamais devenir urgent ; <b>non important + urgent</b> se délègue ou se traite rapidement sans y consacrer trop d'énergie ; <b>non important + non urgent</b> peut attendre ou être éliminé.</p>
+      <button class="btn btn-primary" onclick="m4ForceContinue()">Continuer vers le planning →</button>
+    </div>`;
+}
+
+function m4ForceContinue(){
+  document.querySelectorAll('.dropzone').forEach(zone=>{
+    const zoneName = zone.dataset.zone;
+    zone.querySelectorAll('.chip').forEach(chip=>{
+      chip.classList.remove('incorrect-mark');
+      chip.classList.add('correct-mark');
+    });
+  });
+  document.getElementById('m4-planning-wrap').style.display='block';
+  renderM4Planning();
+  document.getElementById('m4-planning-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+const M4_DAYS = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+const M4_PLAN_TYPES = ["Cours","Travail perso","Révisions","Travail de groupe","Repos"];
+
+function renderM4Planning(){
+  const wrap = document.getElementById('m4-planning-wrap');
+  wrap.innerHTML = `
+    <p class="pill">Planning hebdomadaire</p>
+    <p class="q-text">Faites glisser les étiquettes dans les jours de la semaine pour construire un planning réaliste (obligations, travail personnel, révisions, travail de groupe, repos).</p>
+    <div class="tray" id="m4-plan-tray"></div>
+    <div class="week-grid" id="m4-week"></div>
+    <div class="feedback" id="m4-plan-feedback"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="m4PlanCheck()">Vérifier mon planning</button>
+      <button class="btn" id="m4-plan-continue" style="display:none;" onclick="document.getElementById('m4-content').innerHTML=keyRewardHTML(4); completeMission(3,150);">Continuer →</button>
+    </div>`;
+  const tray = document.getElementById('m4-plan-tray');
+  M4_PLAN_TYPES.forEach(type=>{
+    const chip = document.createElement('div');
+    chip.className='chip'; chip.draggable=true; chip.textContent=type;
+    chip.addEventListener('dragstart', e=> e.dataTransfer.setData('text/plain', type));
+    tray.appendChild(chip);
+  });
+  const week = document.getElementById('m4-week');
+  M4_DAYS.forEach(day=>{
+    const col = document.createElement('div');
+    col.className='day-col'; col.dataset.day=day;
+    col.innerHTML = `<div class="day-label">${day}</div>`;
+    col.addEventListener('dragover', e=>{ e.preventDefault(); col.classList.add('dragover'); });
+    col.addEventListener('dragleave', ()=> col.classList.remove('dragover'));
+    col.addEventListener('drop', e=>{
+      e.preventDefault(); col.classList.remove('dragover');
+      const type = e.dataTransfer.getData('text/plain');
+      const plan = document.createElement('div');
+      plan.className='plan-chip';
+      plan.innerHTML = `<span>${type}</span><span class="rm" onclick="this.parentElement.remove()">×</span>`;
+      col.appendChild(plan);
+    });
+    week.appendChild(col);
+  });
+}
+
+function m4PlanCheck(){
+  const week = document.getElementById('m4-week');
+  const cols = week.querySelectorAll('.day-col');
+  const typesUsed = new Set();
+  let emptyDays = 0;
+  cols.forEach(c=>{
+    const chips = c.querySelectorAll('.plan-chip span:first-child');
+    if(chips.length===0) emptyDays++;
+    chips.forEach(s=>typesUsed.add(s.textContent));
+  });
+  const fb = document.getElementById('m4-plan-feedback');
+  const hasRepos = typesUsed.has('Repos');
+  const hasPerso = typesUsed.has('Travail perso') || typesUsed.has('Révisions');
+  let msg = "";
+  let ok = true;
+  if(emptyDays > 2){ msg += "Plusieurs jours sont vides : pensez à répartir votre charge sur toute la semaine. "; ok=false; }
+  if(!hasRepos){ msg += "Aucun temps de repos n'apparaît : un planning réaliste prévoit des marges. "; ok=false; }
+  if(!hasPerso){ msg += "Pensez à intégrer du travail personnel ou des révisions, pas seulement des cours. "; ok=false; }
+  fb.className = 'feedback show ' + (ok?'good':'bad');
+  fb.innerHTML = ok
+    ? `<strong>Planning réaliste.</strong> Vous intégrez à la fois les obligations, le travail personnel et des marges de repos — c'est exactement l'équilibre recherché.`
+    : `<strong>À affiner :</strong> ${msg}`;
+  document.getElementById('m4-plan-continue').style.display='inline-flex';
+}
+
+/* =========================================================
+   MISSION 5 — DÉTECTIVES DE L'INFORMATION
+========================================================= */
+let m5Step = 0;
+function initMission5(){ m5Step = 0; renderM5(); }
+
+function renderM5(){
+  const el = document.getElementById('m5-content');
+  if(m5Step===0) return m5Step1(el);
+  if(m5Step===1) return m5Step2(el);
+  if(m5Step===2) return m5Step3(el);
+  if(m5Step===3) return m5Step4(el);
+  el.innerHTML = keyRewardHTML(5);
+  completeMission(4, 150);
+}
+
+function m5Step1(el){
+  const options = [
+    "Le sommeil c'est important ?",
+    "Quel est l'effet de la durée du sommeil sur la capacité de mémorisation chez les étudiants ?",
+    "Pourquoi je suis fatigué ?",
+    "Le sommeil et la mémoire"
+  ];
+  el.innerHTML = `
+    <p class="pill">Étape 1 — Formuler une question de recherche</p>
+    <p class="q-text">Problématique : vous devez préparer un exposé sur l'impact du sommeil sur la mémoire. Quelle est la meilleure question de recherche ?</p>
+    <div class="options" id="m5-opts">
+      ${options.map((o,i)=>`<div class="option" onclick="m5Answer1(${i})"><span class="option-letter">${String.fromCharCode(65+i)}.</span><span>${o}</span></div>`).join('')}
+    </div>
+    <div class="feedback" id="m5-fb"></div>
+    <div class="btn-row" id="m5-nav" style="display:none;"><button class="btn btn-primary" onclick="m5Step++; renderM5();">Continuer →</button></div>`;
+}
+function m5Answer1(i){
+  const correct = 1;
+  const opts = document.querySelectorAll('#m5-opts .option');
+  opts.forEach((o,idx)=>{ o.classList.add('disabled'); if(idx===i) o.classList.add(i===correct?'correct':'incorrect'); if(idx===correct) o.classList.add('correct'); });
+  const fb = document.getElementById('m5-fb');
+  fb.className='feedback show '+(i===correct?'good':'bad');
+  fb.innerHTML = `<strong>${i===correct?'Exact.':'La bonne réponse est B.'}</strong>Une bonne question de recherche est précise, formulée comme une vraie question, et délimite un sujet observable — ni trop vague ("c'est important ?"), ni trop personnelle, ni un simple thème sans question.`;
+  document.getElementById('m5-nav').style.display='flex';
+}
+
+function m5Step2(el){
+  const options = ["sommeil", "sommeil mémoire étudiants durée", "fatigue université", "dormir"];
+  el.innerHTML = `
+    <p class="pill">Étape 2 — Construire une requête</p>
+    <p class="q-text">Pour rechercher des sources sur cette question, quels mots-clés utiliseriez-vous ?</p>
+    <div class="options" id="m5-opts2">
+      ${options.map((o,i)=>`<div class="option" onclick="m5Answer2(${i})"><span class="option-letter">${String.fromCharCode(65+i)}.</span><span>${o}</span></div>`).join('')}
+    </div>
+    <div class="feedback" id="m5-fb2"></div>
+    <div class="btn-row" id="m5-nav2" style="display:none;"><button class="btn btn-primary" onclick="m5Step++; renderM5();">Continuer →</button></div>`;
+}
+function m5Answer2(i){
+  const correct = 1;
+  const opts = document.querySelectorAll('#m5-opts2 .option');
+  opts.forEach((o,idx)=>{ o.classList.add('disabled'); if(idx===i) o.classList.add(i===correct?'correct':'incorrect'); if(idx===correct) o.classList.add('correct'); });
+  const fb = document.getElementById('m5-fb2');
+  fb.className='feedback show '+(i===correct?'good':'bad');
+  fb.innerHTML = `<strong>${i===correct?'Exact.':'La bonne réponse est B.'}</strong>Combiner plusieurs mots-clés spécifiques (sujet + population + variable) donne des résultats bien plus pertinents qu'un seul mot trop général.`;
+  document.getElementById('m5-nav2').style.display='flex';
+}
+
+const M5_SOURCES = [
+  {desc:"Article scientifique, revue universitaire à comité de lecture, 2023, auteur chercheur en neurosciences, bibliographie complète.", suggested:"Priorité", note:"Auteur identifiable, institution académique, date récente, références vérifiables : c'est un indicateur fort de fiabilité."},
+  {desc:"Article de blog personnel, aucune date visible, aucun auteur identifié, aucune référence citée.", suggested:"Prudence", note:"Sans auteur ni date ni référence, il est impossible de vérifier l'origine et la fiabilité de l'information."},
+  {desc:"Article de vulgarisation d'un site d'actualité connu, 2022, journaliste identifié, cite ses sources.", suggested:"Vérification", note:"Le journaliste est identifié et cite ses sources, mais un article de vulgarisation reste une synthèse : il est utile de recouper avec la source scientifique d'origine."},
+  {desc:"Site institutionnel officiel, 2021, organisme identifiable mais pas d'auteur individuel nommé.", suggested:"Vérification", note:"La source institutionnelle est sérieuse, mais même une source officielle mérite d'être datée, recoupée et contextualisée avant d'être citée comme définitive."}
+];
+
+function m5Step3(el){
+  el.innerHTML = `
+    <p class="pill">Étape 3 — Évaluer la fiabilité des sources</p>
+    <p class="q-text">Pour chaque source, indiquez si vous l'utiliseriez en priorité, avec vérification, ou avec prudence.</p>
+    <div id="m5-sources"></div>
+    <div class="btn-row" id="m5-nav3" style="display:none;"><button class="btn btn-primary" onclick="m5Step++; renderM5();">Continuer →</button></div>`;
+  const wrap = document.getElementById('m5-sources');
+  M5_SOURCES.forEach((s,i)=>{
+    const row = document.createElement('div');
+    row.className='match-row';
+    row.innerHTML = `
+      <div class="match-situation">${s.desc}<div class="feedback" id="m5-src-fb-${i}" style="margin-top:10px;"></div></div>
+      <div class="match-choices" id="m5-src-${i}">
+        ${["Priorité","Vérification","Prudence"].map(c=>`<button class="match-btn" onclick="m5SourcePick(${i},'${c}')">${c}</button>`).join('')}
+      </div>`;
+    wrap.appendChild(row);
+  });
+}
+let m5SourceAnswers = {};
+function m5SourcePick(i, choice){
+  m5SourceAnswers[i] = choice;
+  const s = M5_SOURCES[i];
+  const isMatch = choice === s.suggested;
+  const wrap = document.getElementById('m5-src-'+i);
+  wrap.querySelectorAll('.match-btn').forEach(b=>{
+    b.classList.remove('selected','correct','incorrect');
+    if(b.textContent===choice) b.classList.add(isMatch ? 'correct' : 'incorrect');
+    if(!isMatch && b.textContent===s.suggested) b.classList.add('correct');
+  });
+  const fb = document.getElementById('m5-src-fb-'+i);
+  fb.className = 'feedback show ' + (isMatch ? 'good' : 'bad');
+  fb.innerHTML = isMatch
+    ? `<strong>Votre choix : ${choice}.</strong> ${s.note}`
+    : `<strong>Votre choix : ${choice} — à reconsidérer.</strong> Au vu des indices donnés (auteur, date, institution, références), la classification la plus cohérente est plutôt <b>${s.suggested}</b>. ${s.note}`;
+  if(Object.keys(m5SourceAnswers).length === M5_SOURCES.length){
+    document.getElementById('m5-nav3').style.display='flex';
+  }
+}
+
+function m5Step4(el){
+  const options = [
+    "Copie intégrale d'un texte sans référence",
+    "Citation entre guillemets avec référence",
+    "Reformulation personnelle avec référence",
+    "Reformulation personnelle sans référence"
+  ];
+  el.innerHTML = `
+    <p class="pill">Étape 4 — Citation et plagiat</p>
+    <p class="q-text">Parmi ces quatre pratiques, lesquelles respectent les règles de citation ? (plusieurs réponses possibles)</p>
+    <div class="options" id="m5-opts4">
+      ${options.map((o,i)=>`<div class="option" data-i="${i}" onclick="m5Toggle4(${i})"><span class="option-letter">${String.fromCharCode(65+i)}.</span><span>${o}</span></div>`).join('')}
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="m5Validate4()">Valider</button></div>
+    <div class="feedback" id="m5-fb4"></div>
+    <div class="btn-row" id="m5-nav4" style="display:none;"><button class="btn btn-primary" onclick="m5Step++; renderM5();">Continuer →</button></div>`;
+}
+let m5Selected4 = new Set();
+function m5Toggle4(i){
+  const opt = document.querySelector(`#m5-opts4 [data-i="${i}"]`);
+  if(m5Selected4.has(i)){ m5Selected4.delete(i); opt.style.borderColor=''; }
+  else { m5Selected4.add(i); opt.style.borderColor='var(--gold)'; }
+}
+function m5Validate4(){
+  const correctSet = new Set([1,2]);
+  const opts = document.querySelectorAll('#m5-opts4 .option');
+  opts.forEach((o,i)=>{
+    o.classList.add('disabled');
+    o.style.borderColor='';
+    if(correctSet.has(i)) o.classList.add('correct');
+    else if(m5Selected4.has(i)) o.classList.add('incorrect');
+  });
+  const isCorrect = m5Selected4.size===correctSet.size && [...m5Selected4].every(i=>correctSet.has(i));
+  const fb = document.getElementById('m5-fb4');
+  fb.className='feedback show '+(isCorrect?'good':'bad');
+  fb.innerHTML = `<strong>${isCorrect?'Exact.':'Les bonnes réponses sont B et C.'}</strong>Reformuler avec ses propres mots ne signifie pas que l'idée devient la vôtre. Une information empruntée doit toujours être correctement attribuée, que vous la citiez mot pour mot ou que vous la reformuliez.`;
+  document.getElementById('m5-nav4').style.display='flex';
+}
+
+/* =========================================================
+   MISSION FINALE — MON PLAN DE RÉUSSITE
+========================================================= */
+function initFinalMission(){
+  const el = document.getElementById('final-mission-content');
+  el.innerHTML = `
+    <div class="field">
+      <label>MON OBJECTIF</label>
+      <input type="text" id="fm-objectif" placeholder="Ex : Bien démarrer mon semestre en m'organisant dès la première semaine">
+    </div>
+    <div class="field"><label>ACTION 1</label><input type="text" id="fm-a1" placeholder="Ex : Créer mon planning hebdomadaire"></div>
+    <div class="field"><label>ACTION 2</label><input type="text" id="fm-a2" placeholder="Ex : Explorer Moodle et localiser mes cours"></div>
+    <div class="field"><label>ACTION 3</label><input type="text" id="fm-a3" placeholder="Ex : Identifier une personne-ressource en cas de doute"></div>
+    <div class="field">
+      <label>MES RESSOURCES</label>
+      <div class="checks">
+        ${["Moodle","Bibliothèque","Enseignant","Camarades","Tuteur","Autre"].map(r=>`<label class="check-item"><input type="checkbox" value="${r}" ${r==='Autre'?'onchange="fmToggleAutre(this)"':''}> ${r}</label>`).join('')}
+      </div>
+      <input type="text" id="fm-autre-precision" placeholder="Vous avez coché « Autre » : laquelle ? (une seule idée suffit, précisez-la ici)" style="display:none; margin-top:10px;">
+    </div>
+    <div class="field"><label>MON ÉCHÉANCE</label><input type="text" id="fm-echeance" placeholder="Ex : dans 14 jours"></div>
+    <div class="field">
+      <label>MON INDICATEUR DE RÉUSSITE — « Je saurai que j'ai réussi lorsque… »</label>
+      <textarea id="fm-indicateur" placeholder="Écrivez ici..."></textarea>
+      <p class="helper">💡 Un bon indicateur est concret, mesurable et daté (ex : « je pourrai citer 3 sources correctement » plutôt que « je serai plus organisé »). Relisez le vôtre à la lumière de ces trois critères.</p>
+    </div>
+    <div class="feedback" id="fm-fb"></div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="finalMissionSubmit()">Enregistrer mon plan →</button></div>`;
+}
+
+function fmToggleAutre(checkbox){
+  const input = document.getElementById('fm-autre-precision');
+  input.style.display = checkbox.checked ? 'block' : 'none';
+  if(!checkbox.checked) input.value = '';
+}
+
+function finalMissionSubmit(){
+  const objectif = document.getElementById('fm-objectif').value.trim();
+  const a1 = document.getElementById('fm-a1').value.trim();
+  const echeance = document.getElementById('fm-echeance').value.trim();
+  const fb = document.getElementById('fm-fb');
+  if(!objectif || !a1){
+    fb.className='feedback show bad';
+    fb.innerHTML = `<strong>Presque prêt.</strong> Renseignez au moins votre objectif et une première action avant de pouvoir continuer : c'est cette réflexion qui donne son sens à la mission.`;
+    return;
+  }
+  state.finalEcheance = echeance;
+  state.finalObjectif = objectif;
+  fb.className='feedback show good';
+  fb.innerHTML = `<strong>Plan enregistré.</strong> Vous venez de définir un objectif personnel à court terme et les étapes pour l'atteindre — c'est exactement la démarche visée par cette mission. Gardez votre indicateur de réussite sous les yeux : c'est lui qui vous dira si vous avez atteint votre but.`;
+  setTimeout(()=> completeMission(5, 200), 1000);
+}
+
+/* =========================================================
+   OBSTACLES + FINAL SCREEN
+========================================================= */
+function renderObstacles(){
+  const el = document.getElementById('obstacles-content');
+  el.innerHTML = `
+    <div class="obstacle-card"><h3 style="margin:0 0 6px;">🚧 Je manque de temps</h3><p style="margin:0; color:var(--text-dim);">Que puis-je modifier dans mon organisation actuelle (planning, priorités, sollicitations) ?</p></div>
+    <div class="obstacle-card"><h3 style="margin:0 0 6px;">🚧 Je ne comprends pas une consigne</h3><p style="margin:0; color:var(--text-dim);">Quelle ressource puis-je mobiliser (Moodle, enseignant, camarades, tuteur) ?</p></div>
+    <div class="obstacle-card"><h3 style="margin:0 0 6px;">🚧 Je ne sais pas comment commencer</h3><p style="margin:0; color:var(--text-dim);">Quelle serait la toute première action, même petite, que je peux réaliser maintenant ?</p></div>
+    <div class="narrative"><p><b>L'autonomie ne signifie pas tout faire seul.</b> Elle signifie savoir identifier un problème, rechercher les ressources pertinentes et décider de la prochaine action.</p></div>`;
+}
+
+function renderFinalScreen(){
+  const el = document.getElementById('final-screen-content');
+  el.innerHTML = `
+    <div style="text-align:center; padding-top:20px;">
+      <ul class="skill-list" style="text-align:left; max-width:480px; margin:0 auto 30px;">
+        <li>🧭 Je sais me repérer.</li>
+        <li>📜 Je sais identifier les règles et les bonnes ressources.</li>
+        <li>💻 Je sais utiliser mes outils numériques.</li>
+        <li>⏱️ Je sais organiser mon travail.</li>
+        <li>🔎 Je sais rechercher et vérifier l'information.</li>
+      </ul>
+      <h1 class="title-xl">🎓 Mission accomplie !</h1>
+      <p class="subtitle" style="margin:0 auto;">Ton premier semestre commence maintenant. Ton objectif n'est pas de tout savoir immédiatement.
+      Ton objectif est de savoir <b>où chercher, quoi faire et qui solliciter</b> lorsque tu en as besoin.</p>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" onclick="goScreen('screen-challenge'); renderChallenge();">Relever le défi →</button>
+      </div>
+    </div>`;
+}
+
+function renderChallenge(){
+  const el = document.getElementById('challenge-content');
+  const objectif = (state.finalObjectif || '').trim();
+  const echeance = (state.finalEcheance || '').trim();
+  const days = CONFIG.challengeDurationDays;
+  el.innerHTML = `
+    <div class="eyebrow">🎯 JE RELÈVE LE DÉFI</div>
+    <h2 class="title-lg">Défi à court terme</h2>
+    <p class="subtitle">Ce défi ne porte pas sur tout le semestre, mais sur votre tout premier pas concret. Commencez par le préciser ci-dessous, mettez-le en pratique, puis revenez compléter le bilan.</p>
+    <div class="field">
+      <label>MON DÉFI</label>
+      <input type="text" id="challenge-defi" value="${objectif}" placeholder="Ex : mettre en pratique mon planning hebdomadaire">
+    </div>
+    <div class="field">
+      <label>DURÉE ALLOUÉE</label>
+      <input type="text" id="challenge-duree" value="${echeance}" placeholder="Ex : ${days} jours">
+    </div>
+    <p class="helper" style="margin-bottom:18px;">💡 Ce défi correspond à l'échéance à court terme (1 à 2 semaines) visée par la mission « Mon plan de réussite ». Les deux champs ci-dessus reprennent ce que vous aviez indiqué — libre à vous de les ajuster.</p>
+    <div class="field">
+      <label>Qu'est-ce qui a fonctionné ?</label>
+      <textarea id="challenge-worked" placeholder="Écrivez ici une fois le délai écoulé..."></textarea>
+    </div>
+    <div class="field">
+      <label>Qu'est-ce qui doit être ajusté ?</label>
+      <textarea id="challenge-adjust" placeholder="Écrivez ici une fois le délai écoulé..."></textarea>
+    </div>
+    <p class="helper">💡 Ce bilan pourra être prolongé en classe entière via Padlet ou Wooclap.</p>
+    <div class="feedback" id="challenge-fb"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkChallengeAndFinish()">Terminer →</button>
+    </div>`;
+}
+
+function checkChallengeAndFinish(){
+  const defi = document.getElementById('challenge-defi').value.trim();
+  const duree = document.getElementById('challenge-duree').value.trim();
+  const worked = document.getElementById('challenge-worked').value.trim();
+  const adjust = document.getElementById('challenge-adjust').value.trim();
+  const fb = document.getElementById('challenge-fb');
+  if(!defi || !duree || !worked || !adjust){
+    fb.className = 'feedback show bad';
+    fb.innerHTML = `<strong>Presque prêt.</strong> Complétez les quatre champs — votre défi, sa durée, ce qui a fonctionné et ce qui doit être ajusté — avant de continuer : c'est cette réflexion sur vos propres résultats qui compte le plus.`;
+    return;
+  }
+  fb.className = 'feedback show good';
+  fb.innerHTML = `<strong>Bilan enregistré.</strong> Prendre le temps d'identifier ce qui a fonctionné et ce qui doit être ajusté, c'est déjà progresser dans votre autonomie.`;
+  setTimeout(()=>{ goScreen('screen-closing'); renderClosing(); }, 900);
+}
+
+function renderClosing(){
+  const el = document.getElementById('closing-content');
+  el.innerHTML = `
+    <div style="text-align:center; padding-top:10vh;">
+      <div style="font-size:52px; margin-bottom:10px;">🧭✨</div>
+      <h1 class="title-xl">Ce n'est pas une fin. C'est un point de départ.</h1>
+      <p class="subtitle" style="margin:0 auto 18px;">
+        Chaque question que tu oses poser, chaque ressource que tu prends le temps d'explorer,
+        chaque erreur que tu comprends au lieu de l'éviter : voilà ce qui construit une compétence
+        durable, bien au-delà de ce module. La curiosité reste le meilleur moteur d'apprentissage —
+        et personne d'autre que toi ne peut l'activer.
+      </p>
+      <p class="subtitle" style="margin:0 auto;">
+        À très vite pour la suite de ton parcours universitaire.
+      </p>
+    </div>`;
+}
+</script>
+</body>
+</html>
